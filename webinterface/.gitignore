@@ -1,5 +1,7 @@
 logs
 target
+/.bloop
+/.g8
 /.metals
 /.bsp
 /.idea
