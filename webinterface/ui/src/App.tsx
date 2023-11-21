@@ -1,68 +1,57 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "./App.css";
-import PieChartComponent from "./components/TopicPieChart/TopicPieChart"; // Assuming you have a PieChartComponent
-import DonutChartComponent from "./components/SentimentChart/SentimentChart";
-import Header from "./components/Header/Header";
-import Footer from "./components/Footer/Footer";
+import Header from "./components/HeaderComponent/HeaderComponent";
+//import TimestampSelector from "./components/TimestampSelectorComponent/TimestampSelectorComponent";
+import PieChartComponent from "./components/TopicPieChartComponent/TopicPieChartComponent"; // Assuming you have a PieChartComponent
+import DonutChartComponent from "./components/SentimentChartComponent/SentimentChartComponent";
+import Footer from "./components/FooterComponent/FooterComponent";
+import SelectionRowComponent from "./components/SelectionRowComponent/SelectionRowComponent";
 
-function App() {
-    const [redditData, setRedditData] = useState(null);
-    const [nytData, setNytData] = useState(null);
-    const [tsData, setTsData] = useState(null);
+export interface Topic {
+    name: string;
+    count: number;
+    positives: number;
+    negatives: number;
+}
 
-    useEffect(() => {
+export interface NewsData {
+    source: string;
+    topics: Topic[];
+}
+
+export default function App() {
+    const [newsData, setNewsData] = useState<NewsData[]>([]);
+
+    async function fetchData(timestamp: string) {
         // Fetch Reddit data from the Flask backend
-        fetch("http://127.0.0.1:5001/api/reddit")
+        fetch("http://127.0.0.1:5001/api/" + timestamp)
             .then((response) => response.json())
-            .then((data) => setRedditData(data))
+            .then((data) => setNewsData(data))
             .catch((error) => console.error(error));
-
-    // Fetch NYT data from the Flask backend
-    fetch("http://127.0.0.1:5001/api/nyt")
-        .then((response) => response.json())
-        .then((data) => setNytData(data))
-        .catch((error) => console.error(error));
-
-    fetch("http://127.0.0.1:5001/api/ts")
-        .then((response) => response.json())
-        .then((data) => setTsData(data))
-        .catch((error) => console.error(error));
-    }, []); // Empty dependency array ensures the effect runs once after initial render
+    }
 
     return (
         <div className="App">
             <Header />
-
+            <SelectionRowComponent onUpdate={fetchData}/>
             <div className="charts-container">
-                {redditData && <PieChartComponent data={redditData} title="Reddit" />}
-                {nytData && <PieChartComponent data={nytData} title="New York Times" />}
-                {tsData && <PieChartComponent data={tsData} title="Tagesschau" />}
+                {newsData.map(source => (
+                    <PieChartComponent {...source} />
+                ))}
             </div>
+            
+            {newsData.map(source => (
+                <div>
+                    <h2 className="dark-heading" id="sentiment-heading">Reddit</h2>
 
-            <h2 className="dark-heading" id="sentiment-heading">Reddit</h2>
-
-            <div className="sentiment-container">
-            {redditData && redditData.map((topic, index) => (
-                <DonutChartComponent key={index} topic={topic} />))}
-            </div>
-
-            <h2 className="dark-heading" id="sentiment-heading">New York Times</h2>
-
-            <div className="sentiment-container">
-                {nytData && nytData.map((topic, index) => (
-                    <DonutChartComponent key={index} topic={topic} />))}
-            </div>
-
-            <h2 className="dark-heading" id="sentiment-heading">Tagesschau</h2>
-
-            <div className="sentiment-container">
-                {tsData && tsData.map((topic, index) => (
-                    <DonutChartComponent key={index} topic={topic} />))}
-            </div>
-
+                    <div className="sentiment-container">
+                        {source.topics.map((topic, index) => (
+                            <DonutChartComponent key={index} topic={topic.name} numPositives={topic.positives} numNegatives={topic.negatives} />
+                        ))}
+                    </div>
+                </div>
+            ))}
             <Footer />
         </div>
     );
 }
-
-export default App;
