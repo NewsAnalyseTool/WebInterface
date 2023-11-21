@@ -1,11 +1,11 @@
 import { useState } from "react";
 import "./App.css";
-import Header from "./components/HeaderComponent/HeaderComponent";
+import Header from "./components/Header/Header";
 //import TimestampSelector from "./components/TimestampSelectorComponent/TimestampSelectorComponent";
-import PieChartComponent from "./components/TopicPieChartComponent/TopicPieChartComponent"; // Assuming you have a PieChartComponent
-import DonutChartComponent from "./components/SentimentChartComponent/SentimentChartComponent";
-import Footer from "./components/FooterComponent/FooterComponent";
-import SelectionRowComponent from "./components/SelectionRowComponent/SelectionRowComponent";
+import TopicPieChart from "./components/TopicPieChart/TopicPieChart"; // Assuming you have a PieChartComponent
+import SentimentChart from "./components/SentimentChart/SentimentChart";
+import Footer from "./components/Footer/Footer";
+import SelectionRow from "./components/SelectionRow/SelectionRow";
 
 export interface Topic {
     name: string;
@@ -33,10 +33,10 @@ export default function App() {
     return (
         <div className="App">
             <Header />
-            <SelectionRowComponent onUpdate={fetchData}/>
+            <SelectionRow onUpdate={fetchData}/>
             <div className="charts-container">
                 {newsData.map(source => (
-                    <PieChartComponent {...source} />
+                    <TopicPieChart {...source} />
                 ))}
             </div>
             
@@ -46,7 +46,7 @@ export default function App() {
 
                     <div className="sentiment-container">
                         {source.topics.map((topic, index) => (
-                            <DonutChartComponent key={index} topic={topic.name} numPositives={topic.positives} numNegatives={topic.negatives} />
+                            <SentimentChart key={index} topic={topic.name} numPositives={topic.positives} numNegatives={topic.negatives} />
                         ))}
                     </div>
                 </div>

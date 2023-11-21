@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 
-interface SelectionRowComponentProps {
+interface SelectionRowProps {
     onUpdate: (timestamp: string) => void;
 }
 
-export default function SelectionRowComponent({ onUpdate }: SelectionRowComponentProps) {
+export default function SelectionRow({ onUpdate }: SelectionRowProps) {
     const [timestamp, setTimestamp] = useState<string>('this_week');
 
     const fetchData = useCallback((timestamp: string) => {
