@@ -1,18 +1,11 @@
+@import 'color_palette.css';
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f8f9fa;
-  color: #343a40;
-}
-
-/* Header styles */
-header {
-  background-color: #007bff;
-  color: #fff;
-  padding: 10px 0;
-  text-align: center;
-  margin-bottom: 20px;
+  background-color: var(--background);
+  color: var(--text);
 }
 
 /* Main container styles */
@@ -40,17 +33,6 @@ h2 {
   margin-bottom: 20px;
   font-size: 24px;
   color: #007bff;
-}
-
-/* Footer styles */
-footer {
-  background-color: #007bff;
-  color: #fff;
-  text-align: center;
-  padding: 10px 0;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
 }
 
 .charts-container {

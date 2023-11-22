@@ -1,0 +1,36 @@
+:root {
+    /*Change palette as you like*/
+    /*First palette*/
+    --text: #000000;
+    --background: #d8edf8;
+    --primary: #1b678d;
+    --secondary: #c7e5f4;
+    --accent: #2693c9;
+
+    /*
+    --text: #e9f0fb;
+    --background: #060f1e;
+    --primary: #1d519f;
+    --secondary: #040b16;
+    --accent: #2463c2;
+
+    --text: #0f2324;
+    --background: #dbeff0;
+    --primary: #347f83;
+    --secondary: #cce9eb;
+    --accent: #43a3a8;
+
+    --text: #0a0f0e;
+    --background: #ffffff;
+    --primary: #c2d6d1;
+    --secondary: #c2d6d1;
+    --accent: #53796f;
+
+    --text: #060f1e;
+    --background: #eaf0fb;
+    --primary: #2d6ed7;
+    --secondary: #a9c4ef;
+    --accent: #2156ab;
+    */
+}
+

@@ -1,3 +1,7 @@
+# Credentials for Test-MongoDB
+# MAKE SURE THIS IS ALWAYS IN THE GITIGNORE FILE
+test_backend/config.py
+
 # Logs
 logs
 *.log

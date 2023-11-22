@@ -1,7 +1,9 @@
+import './HeaderComponent.css';
+
 const Header = () => {
     return (
         <header>
-            <h1>Topic Distributions</h1>
+            <h1>News Trends</h1>
         </header>
     );
 };
