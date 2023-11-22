@@ -17,7 +17,7 @@ body {
 /* Pie chart styles */
 .pie-chart {
   margin-bottom: 20px;
-  background-color: #fff;
+  background-color: var(--secondary);
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 20px;
@@ -32,7 +32,7 @@ body {
 h2 {
   margin-bottom: 20px;
   font-size: 24px;
-  color: #007bff;
+  color: var(--text);
 }
 
 .charts-container {
@@ -45,7 +45,7 @@ h2 {
   margin-left: 100px;
   margin-right: 100px;
   margin-bottom: 75px;;
-  background-color: #fff;
+  background-color: var(--secondary);
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 20px;
@@ -55,11 +55,11 @@ h2 {
 }
 
 .dark-heading {
-  color:rgb(95, 95, 95)
+  color: var(--text)
 }
 
 #sentiment-heading {
   margin-left: 110px;
-  color: rgb(20, 20, 20);
+  color: var(--text);
   font-size: 30px;
 }

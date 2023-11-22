@@ -1,19 +1,20 @@
 :root {
     /*Change palette as you like*/
-    /*First palette*/
+    /*First palette
     --text: #000000;
     --background: #d8edf8;
     --primary: #1b678d;
     --secondary: #c7e5f4;
     --accent: #2693c9;
 
-    /*
+    */
     --text: #e9f0fb;
     --background: #060f1e;
     --primary: #1d519f;
     --secondary: #040b16;
     --accent: #2463c2;
 
+    /*
     --text: #0f2324;
     --background: #dbeff0;
     --primary: #347f83;

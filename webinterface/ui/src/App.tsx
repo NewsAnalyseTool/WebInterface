@@ -22,18 +22,10 @@ export interface NewsData {
 export default function App() {
     const [newsData, setNewsData] = useState<NewsData[]>([]);
 
-    async function fetchData(timestamp: string) {
-        // Fetch Reddit data from the Flask backend
-        fetch("http://127.0.0.1:5001/api/" + timestamp)
-            .then((response) => response.json())
-            .then((data) => setNewsData(data))
-            .catch((error) => console.error(error));
-    }
-
     return (
         <div className="App">
             <Header />
-            <SelectionRow onUpdate={fetchData}/>
+            <SelectionRow onUpdate={setNewsData}/>
             <div className="charts-container">
                 {newsData.map(source => (
                     <TopicPieChart {...source} />
@@ -42,7 +34,7 @@ export default function App() {
             
             {newsData.map(source => (
                 <div>
-                    <h2 className="dark-heading" id="sentiment-heading">Reddit</h2>
+                    <h2 className="dark-heading" id="sentiment-heading">{source.source}</h2>
 
                     <div className="sentiment-container">
                         {source.topics.map((topic, index) => (
