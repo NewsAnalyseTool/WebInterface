@@ -2,13 +2,13 @@ import { Doughnut } from "react-chartjs-2";
 import {Chart, ChartOptions, ArcElement} from 'chart.js';
 Chart.register(ArcElement);
 
-interface SentimentChartComponentProps {
+interface SentimentChartProps {
     topic: string;
     numPositives: number;
     numNegatives: number;
 }
 
-export default function SentimentChart({ topic, numPositives, numNegatives }: SentimentChartComponentProps) {
+export default function SentimentChart({ topic, numPositives, numNegatives }: SentimentChartProps) {
     
     const data = {
         labels: ["Positive", "Negative"],
