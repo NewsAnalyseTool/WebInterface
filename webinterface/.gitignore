@@ -1,5 +1,7 @@
 logs
 target
+/.vscode
+/conf/db.conf
 /.bloop
 /.g8
 /.metals
