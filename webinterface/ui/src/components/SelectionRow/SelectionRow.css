@@ -1,0 +1,43 @@
+@import '../../color_palette.css';
+
+.selection-row-box {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 200px;
+    margin-right: 200px;
+    margin-bottom: 40px;
+}
+
+.selection-row-text-box {
+    display: flex;
+}
+
+select {
+    margin-left: 20px;
+    margin-top: auto;
+    margin-bottom: auto;
+    height: 40px;
+    color: var(--text);
+    font-size: 16pt;
+    font-weight: bold;
+    background-color: var(--secondary);
+    border-radius: 20px;
+    border: 0;
+}
+
+button {
+    margin-top: auto;
+    margin-bottom: auto;
+    height: 50px;
+    width: 50px;
+    font-size: 20pt;
+    border-radius: 5px;
+    border-width: 0px;
+    background-color: var(--primary);
+    color: var(--text);
+}
+
+button:hover {
+    border-color: var(--text);
+    border-width: 2px;
+}
