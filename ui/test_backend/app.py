@@ -64,7 +64,7 @@ def get_data():
                     }
             ]},
             {
-                "source": "New York Times",
+                "name": "New York Times",
                 "articleCount": nyt_article_count,
                 "articlePerc" : nyt_article_perc,
                 "categoryCount": nyt_ctgry_count,
@@ -103,7 +103,7 @@ def get_data():
                     }
             ]},
             {
-                "source": "Tagesschau",
+                "name": "Tagesschau",
                 "articleCount": ts_article_count,
                 "articlePerc" : ts_article_perc,
                 "categoryCount": ts_ctgry_count,
