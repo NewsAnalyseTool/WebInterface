@@ -33,5 +33,13 @@
     --secondary: #a9c4ef;
     --accent: #2156ab;
     */
+
+    --box-space: 10px;
+    --box-height: 174px;
+    --double-box-height: calc(var(--box-height) * 2);
+    --triple-box-height: calc(var(--box-height) * 3);
+    --box-width: 260px;
+    --double-box-width: calc(var(--box-width) * 2);
+    --triple-box-width: calc(var(--box-width) * 3);
 }
 
