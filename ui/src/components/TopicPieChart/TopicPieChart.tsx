@@ -1,12 +1,12 @@
 import { Pie } from "react-chartjs-2";
 import {Chart, ChartOptions, ArcElement} from 'chart.js'
-import { NewsData } from "../../App";
+import { Source } from "../../App";
 Chart.register(ArcElement);
 
-export default function TopicPieChart(news: NewsData) {
+export default function TopicPieChart(source: Source) {
     // Extract data for the chart
-    const labels = news.topics.map(topic => topic.name);
-    const values = news.topics.map(topic => topic.count);
+    const labels = source.categories.map(category => category.name);
+    const values = source.categories.map(category => category.count);
 
     const options: ChartOptions<'pie'> = {
         plugins: {
@@ -38,7 +38,7 @@ export default function TopicPieChart(news: NewsData) {
 
     return (
         <div className="pie-chart">
-            <h2>{news.source}</h2>
+            <h2>{source.name}</h2>
             <Pie data={chartData} options={options}/>
         </div>
     );

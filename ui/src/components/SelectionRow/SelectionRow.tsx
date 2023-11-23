@@ -3,7 +3,7 @@ import { NewsData } from '../../App';
 import './SelectionRow.css'
 
 interface SelectionRowProps {
-    onUpdate: Dispatch<SetStateAction<NewsData[]>>;
+    onUpdate: Dispatch<SetStateAction<NewsData>>;
 }
 
 export default function SelectionRow({ onUpdate }: SelectionRowProps) {
