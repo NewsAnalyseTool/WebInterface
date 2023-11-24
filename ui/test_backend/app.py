@@ -1,5 +1,4 @@
-from flask import Flask, jsonify
-from pymongo import MongoClient
+from flask import Flask
 from flask_cors import CORS
 import random
 
@@ -8,11 +7,11 @@ CORS(app)
 
 class Category:
     def __init__(self):
-        self.count = random.randint(1, 50)
+        self.count = random.randint(1, random.randint(4, 100))
         self.pos = random.randint(0, self.count)
         self.pos_perc = round(((self.pos / self.count) * 100), 2)
         self.neg = self.count - self.pos
-        self.neg_perc = 100 - self.pos_perc
+        self.neg_perc = round((100 - self.pos_perc), 2)
     
 
 # Route for Reddit data
@@ -23,6 +22,21 @@ def get_data():
     r_article_count = g_data[0].count + g_data[1].count
     nyt_article_count = g_data[2].count + g_data[3].count + g_data[4].count + g_data[5].count
     ts_article_count = g_data[6].count + g_data[7].count + g_data[8].count + g_data[9].count
+    
+    r_pos = g_data[0].pos + g_data[1].pos
+    r_pos_perc = round(((r_pos / r_article_count) * 100), 2)
+    r_neg = g_data[0].neg + g_data[1].neg
+    r_neg_perc = round((100 - r_pos_perc), 2)
+    
+    nyt_pos = g_data[2].pos + g_data[3].pos + g_data[4].pos + g_data[5].pos
+    nyt_pos_perc = round(((nyt_pos / nyt_article_count) * 100), 2)
+    nyt_neg = g_data[2].neg + g_data[3].neg + g_data[4].neg + g_data[5].neg
+    nyt_neg_perc = round((100 - nyt_pos_perc), 2)
+    
+    ts_pos = g_data[6].pos + g_data[7].pos + g_data[8].pos + g_data[9].pos
+    ts_pos_perc = round(((ts_pos / ts_article_count) * 100), 2)
+    ts_neg = g_data[6].neg + g_data[7].neg + g_data[8].neg + g_data[9].neg
+    ts_neg_perc = round((100 - ts_pos_perc), 2)
     
     r_ctgry_count = 2
     nyt_ctgry_count = 4
@@ -44,6 +58,10 @@ def get_data():
                 "articleCount": r_article_count,
                 "articlePerc" : r_article_perc,
                 "categoryCount": r_ctgry_count,
+                "posArticles": r_pos,
+                "posArticlesPerc": r_pos_perc,
+                "negArticles": r_neg,
+                "negArticlesPerc": r_neg_perc,
                 "categories": [
                     {
                         "name": "r/politics",
@@ -68,6 +86,10 @@ def get_data():
                 "articleCount": nyt_article_count,
                 "articlePerc" : nyt_article_perc,
                 "categoryCount": nyt_ctgry_count,
+                "posArticles": nyt_pos,
+                "posArticlesPerc": nyt_pos_perc,
+                "negArticles": nyt_neg,
+                "negArticlesPerc": nyt_neg_perc,
                 "categories": [
                     {
                         "name": "Politics",
@@ -107,6 +129,10 @@ def get_data():
                 "articleCount": ts_article_count,
                 "articlePerc" : ts_article_perc,
                 "categoryCount": ts_ctgry_count,
+                "posArticles": ts_pos,
+                "posArticlesPerc": ts_pos_perc,
+                "negArticles": ts_neg,
+                "negArticlesPerc": ts_neg_perc,
                 "categories": [
                     {
                         "name": "Military", 
