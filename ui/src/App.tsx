@@ -1,11 +1,9 @@
 import { useState } from "react";
 import "./App.css";
 import Header from "./components/Header/Header";
-//import TimestampSelector from "./components/TimestampSelectorComponent/TimestampSelectorComponent";
-import TopicPieChart from "./components/TopicPieChart/TopicPieChart"; // Assuming you have a PieChartComponent
-import SentimentChart from "./components/SentimentChart/SentimentChart";
 import Footer from "./components/Footer/Footer";
 import SelectionRow from "./components/SelectionRow/SelectionRow";
+import NewsSourceElement from "./components/NewsSourceElement/NewsSourceElement";
 
 export interface Category {
     name: string;           // the name of the category (see examples above)
@@ -20,6 +18,10 @@ export interface Source {
     articleCount: number;       // number of articles from this source
     articlePerc: number;        // percentage of articles from this source out of all sources
     categoryCount: number;      // number of categories from this source
+    posArticles: number;        // number of positive articles from this source
+    posArticlesPerc: number;    // percentage of positive articles from this source
+    negArticles: number;        // number of negative articles from this source
+    negArticlesPerc: number;    // percentage of negative articles from this source
     categories: Category[]      // list of labels for articles or groups to which articles belong (e.g. "Politics", "Economy"); perhaps more detailed or specific to the source (e.g. "World War II" (detailed), "r/news" (specific to Reddit))
 }
 
@@ -35,25 +37,15 @@ export default function App() {
     return (
         <div className="App">
             <Header />
-            <SelectionRow onUpdate={setNewsData}/>
+            <div className="content">
+                <SelectionRow onUpdate={setNewsData}/>
 
-            <div className="charts-container">
-                {newsData.sources.map(source => (
-                    <TopicPieChart {...source} />
-                ))}
-            </div>
-            
-            {newsData.sources.map(source => (
                 <div>
-                    <h2 className="dark-heading" id="sentiment-heading">{source.name}</h2>
-
-                    <div className="sentiment-container">
-                        {source.categories.map((category) => (
-                            <SentimentChart {...category} />
-                        ))}
-                    </div>
+                    {newsData.sources.map(source => (
+                        <NewsSourceElement {...source} />
+                    ))}
                 </div>
-            ))}
+            </div>
             <Footer />
         </div>
     );

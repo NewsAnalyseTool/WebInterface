@@ -37,9 +37,6 @@ export default function TopicPieChart(source: Source) {
     };
 
     return (
-        <div className="pie-chart">
-            <h2>{source.name}</h2>
-            <Pie data={chartData} options={options}/>
-        </div>
+        <Pie data={chartData} options={options}/>
     );
 }

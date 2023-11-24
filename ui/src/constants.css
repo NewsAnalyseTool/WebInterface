@@ -1,4 +1,7 @@
 :root {
+    font-family: Inter, sans-serif;
+    font-feature-settings: 'liga' 1, 'calt' 1; /* fix for Chrome */
+
     /*Change palette as you like*/
     /*First palette
     --text: #000000;
@@ -8,11 +11,11 @@
     --accent: #2693c9;
 
     */
-    --text: #e9f0fb;
-    --background: #060f1e;
-    --primary: #1d519f;
-    --secondary: #040b16;
-    --accent: #2463c2;
+    --text: #e5f2fa;
+    --background: #010304;
+    --primary: #3ea1da;
+    --secondary: #06151e;
+    --accent: #268ec9;
 
     /*
     --text: #0f2324;
@@ -33,13 +36,7 @@
     --secondary: #a9c4ef;
     --accent: #2156ab;
     */
-
-    --box-space: 10px;
-    --box-height: 174px;
-    --double-box-height: calc(var(--box-height) * 2);
-    --triple-box-height: calc(var(--box-height) * 3);
-    --box-width: 260px;
-    --double-box-width: calc(var(--box-width) * 2);
-    --triple-box-width: calc(var(--box-width) * 3);
 }
-
+@supports (font-variation-settings: normal) {
+    :root { font-family: InterVariable, sans-serif; }
+}

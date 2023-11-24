@@ -1,15 +1,19 @@
 import { Doughnut } from "react-chartjs-2";
 import {Chart, ChartOptions, ArcElement} from 'chart.js';
-import { Category } from '../../App';
 Chart.register(ArcElement);
 
-export default function SentimentChart(category: Category) {
+interface SentimentChartProps {
+    positives: number;
+    negatives: number;
+}
+
+export default function SentimentChart({ positives, negatives }: SentimentChartProps) {
     
     const data = {
         labels: ["Positive", "Negative"],
         datasets: [
             {
-                data: [category.pos, category.neg],
+                data: [positives, negatives],
                 backgroundColor: ["#28a745", "#dc3545"],
             },
         ],
@@ -28,9 +32,6 @@ export default function SentimentChart(category: Category) {
     };
 
     return (
-        <div className="donut-chart">
-            <h2 className="dark-heading">{category.name}</h2>
-            <Doughnut data={data} options={options} />
-        </div>
+        <Doughnut data={data} options={options} />
     );
 }

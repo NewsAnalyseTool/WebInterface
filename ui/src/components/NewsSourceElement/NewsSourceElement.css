@@ -1,0 +1,128 @@
+@import '../../constants.css';
+
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 10px 10px;
+    grid-auto-flow: row;
+    grid-template-areas:
+        "source-name source-name categories-chart categories-chart sentiment-chart sentiment-chart num-articles"
+        "categories categories categories-chart categories-chart sentiment-chart sentiment-chart article-ratio"
+        "categories categories categories-chart categories-chart sentiment-pos sentiment-neg num-topics";
+    width: 1019px;
+    height: 284px;
+    margin-bottom: 20px;
+}
+
+.container h1 {
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.container h2 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.container h3 {
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.container p {
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.rounded-box {
+    background-color: var(--secondary);
+    border-radius: 10px;
+}
+
+
+/*######################## SOURCE TITLE ########################*/
+.source-name {
+    grid-area: source-name;
+    background-color: var(--primary);
+    border-radius: 10px;
+}
+
+.title-box {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/*##################### CATEGORIES OVERVIEW ####################*/
+.categories {
+    grid-area: categories;
+    text-align: center;
+}
+
+/*###################### CATEGORIES CHART ######################*/
+.categories-chart-div {
+    grid-area: categories-chart;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.categories-chart {
+    width: 200px;
+    height: 200px;
+}
+
+/*####################### SENTIMENT CHART ######################*/
+.sentiment-chart-div {
+    grid-area: sentiment-chart;
+    position: relative;
+    text-align: center;
+    height: auto;
+}
+
+.sentiment-chart {
+    position: absolute;
+    height: 200px;
+    width: 200px;
+    bottom: -125px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/*####################### SENTIMENT DATA #######################*/
+.double-data-box {
+    text-align: center;
+}
+
+.double-data-inline-values p {
+    margin-top: 0;
+    margin-bottom: 2px;
+}
+
+.sentiment-pos {
+    grid-area: sentiment-pos;
+}
+
+.sentiment-neg {
+    grid-area: sentiment-neg;
+}
+
+/*######################### SMALL STATS ########################*/
+.single-data-box {
+    text-align: center;
+}
+
+.num-articles {
+    grid-area: num-articles;
+}
+
+.article-ratio {
+    grid-area: article-ratio;
+}
+
+.num-topics {
+    grid-area: num-topics;
+}

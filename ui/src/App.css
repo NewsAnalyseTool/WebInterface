@@ -1,65 +1,18 @@
 @import 'constants.css';
 
 body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: var(--background);
-  color: var(--text);
+    margin: 0;
+    padding: 0;
+    background-color: var(--background);
+    color: var(--text);
 }
 
-/* Main container styles */
-.container {
-  margin: 0 auto;
-  padding: 20px;
+
+.App {
+    text-align: center;
 }
 
-/* Pie chart styles */
-.pie-chart {
-  margin-bottom: 20px;
-  background-color: var(--secondary);
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.donut-chart {
-  width: 200px;
-}
-
-/* Chart title styles */
-h2 {
-  margin-bottom: 20px;
-  font-size: 24px;
-  color: var(--text);
-}
-
-.charts-container {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 100px;
-}
-
-.sentiment-container {
-  margin-left: 100px;
-  margin-right: 100px;
-  margin-bottom: 75px;;
-  background-color: var(--secondary);
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: space-around;
-}
-
-.dark-heading {
-  color: var(--text)
-}
-
-#sentiment-heading {
-  margin-left: 110px;
-  color: var(--text);
-  font-size: 30px;
+.content {
+    display: inline-block;
+    margin-bottom: 100px;
 }
