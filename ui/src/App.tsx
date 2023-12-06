@@ -4,6 +4,7 @@ import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import SelectionRow from "./components/SelectionRow/SelectionRow";
 import NewsSourceElement from "./components/NewsSourceElement/NewsSourceElement";
+import GlobalStatsRow from "./components/GlobalStatsRow/GlobalStatsRow";
 
 export interface Category {
     name: string;           // the name of the category (see examples above)
@@ -39,6 +40,7 @@ export default function App() {
             <Header />
             <div className="content">
                 <SelectionRow onUpdate={setNewsData}/>
+                <GlobalStatsRow numArticles={newsData.totalArticles} numTopics={newsData.totalCategories}/>
 
                 <div>
                     {newsData.sources.map(source => (
