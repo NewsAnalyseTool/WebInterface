@@ -2,7 +2,7 @@ logs
 target
 .bloop
 /.vscode
-/public
+/public/
 conf/db.conf
 /.bloop
 /.g8
