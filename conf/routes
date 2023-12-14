@@ -6,7 +6,8 @@
 # Serve index page from public directory
 GET     /                           controllers.FrontendController.index()
 
-GET     /api/random                 controllers.HomeController.random()
+GET     /api/random                 controllers.TagesschauController.random()
+GET     /api/posts                  controllers.TagesschauController.getAllPosts()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /*file                      controllers.FrontendController.assetOrDefault(file)

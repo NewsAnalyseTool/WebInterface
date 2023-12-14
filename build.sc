@@ -3,8 +3,8 @@ import $ivy.`com.lihaoyi::mill-contrib-playlib:`, mill.playlib._
 
 object webinterface extends PlayModule with SingleModule {
 
-  def scalaVersion = "2.12.18"
-  def playVersion = "2.8.1"
+  def scalaVersion = "2.13.12"
+  def playVersion = "2.9.0"
 
   object test extends PlayTests
 }
