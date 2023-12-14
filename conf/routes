@@ -4,10 +4,11 @@
 # ~~~~
 
 # Serve index page from public directory
-GET     /                           controllers.FrontendController.index()
+GET     /                             controllers.FrontendController.index()
 
-GET     /api/random                 controllers.TagesschauController.random()
-GET     /api/posts                  controllers.TagesschauController.getAllPosts()
+GET     /api/v2/random                controllers.TagesschauController.random()
+GET     /api/v2/posts                 controllers.TagesschauController.getAllPosts()
+GET     /api/v2/posts/date            controllers.TagesschauController.getPostsDate(startDate: String, endDate: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /*file                      controllers.FrontendController.assetOrDefault(file)

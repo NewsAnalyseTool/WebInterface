@@ -5,6 +5,8 @@ import repository.TagesschauRepository
 import play.api.mvc._
 import scala.concurrent.ExecutionContext
 import play.api.libs.json.Json
+import java.util.Date
+import java.text.SimpleDateFormat
 
 @Singleton
 class TagesschauController @Inject() (implicit
@@ -22,4 +24,15 @@ class TagesschauController @Inject() (implicit
         Ok(Json.toJson(posts))
       }
   }
+
+  def getPostsDate(startDate: String, endDate: String): Action[AnyContent] =
+    Action.async { implicit request: Request[AnyContent] =>
+      val dateFormat = new SimpleDateFormat("yyyy-MM-dd")
+      val start = dateFormat.parse(startDate)
+      val end = dateFormat.parse(endDate)
+
+      repository
+        .getPostsDateConstriction(start, end)
+        .map(posts => Ok(Json.toJson(posts)))
+    }
 }

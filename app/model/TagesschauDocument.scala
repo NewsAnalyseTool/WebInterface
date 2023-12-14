@@ -8,13 +8,16 @@ import reactivemongo.api.bson.BSONDocument
 import scala.util.Try
 import reactivemongo.api.bson.BSONDocumentReader
 import reactivemongo.api.bson.BSONString
+import java.util.Date
+import java.text.SimpleDateFormat
+import reactivemongo.api.bson.BSONDateTime
 
 case class AnalyzedPost(
     source: String,
     title: String,
     text: String,
     category: String,
-    date: String,
+    date: Date,
     url: String,
     result: String,
     positive: Double,
@@ -28,16 +31,30 @@ object AnalyzedPost {
   implicit object AnalyzedPostReader extends BSONDocumentReader[AnalyzedPost] {
 
     override def readDocument(doc: BSONDocument): Try[AnalyzedPost] = {
+      val dateFormat = new SimpleDateFormat("yyyy-MM-dd")
+
       val source = doc.getAsTry[String]("source").get
       val title = doc.getAsTry[String]("title").get
       val text = doc.getAsTry[String]("text").get
       val category = doc.getAsTry[String]("category").get
-      val date = doc.getAsTry[String]("date").get
+      val date = 
+        new Date(
+          doc.get("date").get.asInstanceOf[BSONDateTime].value
+        )
       val url = doc.getAsTry[String]("url").get
       val result = doc.getAsTry[String]("result").get
-      val positive = doc.getAsOpt[BSONString]("positive").map(_.value.toDouble).getOrElse(-2.0)
-      val negative = doc.getAsOpt[BSONString]("negative").map(_.value.toDouble).getOrElse(-2.0)
-      val neutral = doc.getAsOpt[BSONString]("neutral").map(_.value.toDouble).getOrElse(-2.0)
+      val positive = doc
+        .getAsOpt[BSONString]("positive")
+        .map(_.value.toDouble)
+        .getOrElse(-2.0)
+      val negative = doc
+        .getAsOpt[BSONString]("negative")
+        .map(_.value.toDouble)
+        .getOrElse(-2.0)
+      val neutral = doc
+        .getAsOpt[BSONString]("neutral")
+        .map(_.value.toDouble)
+        .getOrElse(-2.0)
       Try(
         AnalyzedPost(
           source = source,
