@@ -23,3 +23,13 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment variables
+.env
+
+# Backend 
+test_backend/lib
+test_backend/bin
+test_backend/include
+test_backend/pyvenv.cfg
+test_backend/lib64

@@ -1,4 +1,3 @@
-import { SingleDataBox } from "../NewsSourceElement/NewsSourceElement";
 import './GlobalStatsRow.css';
 
 interface GlobalStatsRowProps {
@@ -10,28 +9,16 @@ export default function GlobalStatsRow({ numTopics, numArticles }: GlobalStatsRo
     return (
         <div className="container">
             <div className="numm-articles">
-                <SingleDataBox
-                    dataName="Articles"
-                    dataValue={numArticles}
-                    dataPostfix=""
-                    girdArea="center"
-                />
+                <p>Articles</p>
+                <p>{numArticles}</p>
             </div>
             <div className="numm-topics">
-                <SingleDataBox
-                    dataName="Topics"
-                    dataValue={numTopics}
-                    dataPostfix=""
-                    girdArea="center"
-                />
+                <p>Topics</p>
+                <p>{numTopics}</p>
             </div>
             <div className="lastt-updated">
-                <SingleDataBox
-                    dataName="Last Updated"
-                    dataValue={12}
-                    dataPostfix=""
-                    girdArea="center"
-                />
+                <p>Last Updated</p>
+                <p>13.12.2023</p>
             </div>
         </div>
     )
