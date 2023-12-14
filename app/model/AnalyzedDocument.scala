@@ -37,7 +37,7 @@ object AnalyzedPost {
       val title = doc.getAsTry[String]("title").get
       val text = doc.getAsTry[String]("text").get
       val category = doc.getAsTry[String]("category").get
-      val date = 
+      val date =
         new Date(
           doc.get("date").get.asInstanceOf[BSONDateTime].value
         )

@@ -2,7 +2,6 @@ package repository
 
 import play.modules.reactivemongo._
 import reactivemongo.api._
-import reactivemongo.api.ReadPreference
 import reactivemongo.api.bson.BSONDocument
 import reactivemongo.api.bson.collection.BSONCollection
 
@@ -16,31 +15,38 @@ import model.AnalyzedPost
 import reactivemongo.api.bson.BSONString
 import reactivemongo.api.bson.BSONDateTime
 import java.util.Date
+import model.Source._
 
 @Singleton
-class TagesschauRepository @Inject() (implicit
+class MongoDb @Inject() (implicit
     ec: ExecutionContext,
-    mongoApi: ReactiveMongoApi,
-    config: Configuration
+    val mongoApi: ReactiveMongoApi,
+    val config: Configuration
 ) {
 
-  private def collection(): Future[BSONCollection] = {
-    mongoApi.database.map(db =>
-      db.collection(config.get[String]("source.tagesschau"))
-    )
+  private def getCollection(source: Source): Future[BSONCollection] = {
+    mongoApi.database.map { db =>
+      val collectionName = source match {
+        case Reddit     => config.get[String]("source.reddit")
+        case Tagesschau => config.get[String]("source.tagesschau")
+      }
+      db.collection(collectionName)
+    }
   }
 
-  def getAll(limit: Int = 100): Future[Seq[AnalyzedPost]] = {
-    collection().flatMap(
-      _.find(BSONDocument())
-        .cursor[AnalyzedPost](ReadPreference.Primary)
-        .collect[Seq](limit, Cursor.FailOnError[Seq[AnalyzedPost]]())
-    )
+  def getAll(source: Source): Future[Seq[AnalyzedPost]] = {
+    getCollection(source)
+      .flatMap(
+        _.find(BSONDocument())
+          .cursor[AnalyzedPost](ReadPreference.Primary)
+          .collect[Seq](-1, Cursor.FailOnError[Seq[AnalyzedPost]]())
+      )
   }
 
-  def getPostsDateConstriction(
+  def getPostsByDateRange(
       start: Date,
-      end: Date
+      end: Date,
+      source: Source
   ): Future[Seq[AnalyzedPost]] = {
 
     val query = BSONDocument(
@@ -50,7 +56,7 @@ class TagesschauRepository @Inject() (implicit
       )
     )
 
-    collection()
+    getCollection(source)
       .flatMap(
         _.find(query)
           .cursor[AnalyzedPost](ReadPreference.Primary)

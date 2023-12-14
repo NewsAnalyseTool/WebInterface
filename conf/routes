@@ -6,9 +6,7 @@
 # Serve index page from public directory
 GET     /                             controllers.FrontendController.index()
 
-GET     /api/v2/random                controllers.TagesschauController.random()
-GET     /api/v2/posts                 controllers.TagesschauController.getAllPosts()
-GET     /api/v2/posts/date            controllers.TagesschauController.getPostsDate(startDate: String, endDate: String)
+GET     /api/v2/posts                 controllers.RestController.getPosts(startDate: Option[String], endDate: Option[String])
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /*file                      controllers.FrontendController.assetOrDefault(file)
