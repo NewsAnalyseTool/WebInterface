@@ -11,16 +11,18 @@ import model.AnalyzedPost
 import java.text.SimpleDateFormat
 import java.util.Date
 
-@Singleton
-class TagesschauService @Inject() (implicit
+class CollectionService @Inject() (implicit
     ec: ExecutionContext,
     val repo: MongoDb
 ) {
 
-  private val source = Tagesschau
+  private var source: Source = _
 
-  def getAllPosts(): Future[Seq[AnalyzedPost]] = {
-    repo.getAll(source)
+  def this(
+      collectionSource: Source
+  )(implicit ec: ExecutionContext, repo: MongoDb) = {
+    this()(ec, repo)
+    source = collectionSource
   }
 
   def getPostsByDateRange(
@@ -32,7 +34,7 @@ class TagesschauService @Inject() (implicit
         val dateFormat = new SimpleDateFormat("yyyy-MM-dd")
         val start = dateFormat.parse(startDate)
         val end = dateFormat.parse(endDate)
-        repo.getPostsByDateRange(start, end, source)
+        repo.getByDateRange(start, end, source)
       }
       case (None, None) => repo.getAll(source)
       case _            => Future.successful(Seq.empty[AnalyzedPost])

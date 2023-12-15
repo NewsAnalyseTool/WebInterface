@@ -43,7 +43,7 @@ class MongoDb @Inject() (implicit
       )
   }
 
-  def getPostsByDateRange(
+  def getByDateRange(
       start: Date,
       end: Date,
       source: Source

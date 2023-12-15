@@ -6,7 +6,7 @@
 # Serve index page from public directory
 GET     /                             controllers.FrontendController.index()
 
-GET     /api/v2/posts                 controllers.RestController.getPosts(startDate: Option[String], endDate: Option[String])
+GET     /api/data                  controllers.RestController.getData(startDate: Option[String], endDate: Option[String])
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /*file                      controllers.FrontendController.assetOrDefault(file)

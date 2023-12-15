@@ -33,25 +33,25 @@ object AnalyzedPost {
     override def readDocument(doc: BSONDocument): Try[AnalyzedPost] = {
       val dateFormat = new SimpleDateFormat("yyyy-MM-dd")
 
-      val source = doc.getAsTry[String]("source").get
-      val title = doc.getAsTry[String]("title").get
-      val text = doc.getAsTry[String]("text").get
-      val category = doc.getAsTry[String]("category").get
-      val date =
+      val source: String = doc.getAsTry[String]("source").getOrElse("")
+      val title: String = doc.getAsTry[String]("title").getOrElse("")
+      val text: String = doc.getAsTry[String]("text").getOrElse("")
+      val category: String = doc.getAsTry[String]("category").getOrElse("")
+      val date: Date =
         new Date(
           doc.get("date").get.asInstanceOf[BSONDateTime].value
         )
-      val url = doc.getAsTry[String]("url").get
-      val result = doc.getAsTry[String]("result").get
-      val positive = doc
+      val url: String = doc.getAsTry[String]("url").getOrElse("")
+      val result: String = doc.getAsTry[String]("result").getOrElse("")
+      val positive: Double = doc
         .getAsOpt[BSONString]("positive")
         .map(_.value.toDouble)
         .getOrElse(-2.0)
-      val negative = doc
+      val negative: Double = doc
         .getAsOpt[BSONString]("negative")
         .map(_.value.toDouble)
         .getOrElse(-2.0)
-      val neutral = doc
+      val neutral: Double = doc
         .getAsOpt[BSONString]("neutral")
         .map(_.value.toDouble)
         .getOrElse(-2.0)
