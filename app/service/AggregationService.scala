@@ -49,18 +49,23 @@ class AggregationService @Inject() (implicit
                 articleCount.toDouble / totalArticles * 100.0
 
               val categoryCount = sourcePosts.map(_.category).distinct.size
-              val posArticles = sourcePosts.count(_.result == "positive")
-              val posArticlesPerc = posArticles.toDouble / articleCount * 100.0
-              val negArticles = sourcePosts.count(_.result == "negative")
-              val negArticlesPerc = negArticles.toDouble / articleCount * 100.0
+              val posArticles: Int = sourcePosts.count(_.result == "positive")
+              val posArticlesPerc: Double =
+                posArticles.toDouble / articleCount * 100.0
+              val negArticles: Int = sourcePosts.count(_.result == "negative")
+              val negArticlesPerc: Double =
+                negArticles.toDouble / articleCount * 100.0
 
-              val categories = sourcePosts.groupBy(_.category)
+              val categories = sourcePosts
+                .groupBy(_.category)
                 .map { case (category, categoryPosts) =>
-                  val count = categoryPosts.size
-                  val posCount = categoryPosts.count(_.result == "positive")
-                  val posPerc = posCount.toDouble / count * 100.0
-                  val negCount = categoryPosts.count(_.result == "negative")
-                  val negPerc = negCount.toDouble / count * 100.0
+                  val count: Int = categoryPosts.size
+                  val posCount: Int =
+                    categoryPosts.count(_.result == "positive")
+                  val posPerc: Double = posCount.toDouble / count * 100.0
+                  val negCount: Int =
+                    categoryPosts.count(_.result == "negative")
+                  val negPerc: Double = negCount.toDouble / count * 100.0
                   model.Category(
                     category,
                     count,
@@ -86,7 +91,7 @@ class AggregationService @Inject() (implicit
             }
             .toSeq
 
-          model.Response(totalArticles, totalCategories, sources)
+        model.Response(totalArticles, totalCategories, sources)
     }
   }
 }
