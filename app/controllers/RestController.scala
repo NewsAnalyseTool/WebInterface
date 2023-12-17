@@ -1,13 +1,11 @@
 package controllers
 
-import javax.inject._
-import play.api.mvc._
-import scala.concurrent.ExecutionContext
 import play.api.libs.json.Json
-import java.util.Date
-import java.text.SimpleDateFormat
-import model.Source
+import play.api.mvc._
 import service.AggregationService
+
+import javax.inject._
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class RestController @Inject() (implicit
@@ -24,8 +22,8 @@ class RestController @Inject() (implicit
   // }
 
   def getData(
-      startDate: Option[String],
-      endDate: Option[String]
+      startDate: String,
+      endDate: String
   ): Action[AnyContent] =
     Action.async { implicit request: Request[AnyContent] =>
       aggregationService.aggregateData(startDate, endDate).map { posts =>

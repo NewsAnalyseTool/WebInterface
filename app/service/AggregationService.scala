@@ -10,36 +10,53 @@ import java.text.SimpleDateFormat
 import model.Source._
 import model.AnalyzedPost
 import model.SourceResponse
+import reactivemongo.api.bson.BSONDocument
+import model.Response
+import model.Category
+import java.util.Date
 
 @Singleton
 class AggregationService @Inject() (implicit
     ec: ExecutionContext,
     val repo: MongoDb
 ) {
-  def aggregateData(
-      startDate: Option[String],
-      endDate: Option[String]
-  ): Future[model.Response] = {
-    val tagesschauFuture =
-      new CollectionService(Tagesschau).getPostsByDateRange(startDate, endDate)
-    val redditFuture =
-      new CollectionService(Reddit).getPostsByDateRange(startDate, endDate)
+  // convert string to Date object
+  def stringToDate(date: String): Date = {
+    val dateformat = new SimpleDateFormat("yyyy-MM-dd")
+    dateformat.parse(date)
+  }
 
-    val allDataFuture = for {
-      tagesschauData <- tagesschauFuture
-      redditData <- redditFuture
+  def aggregateData(
+      startDate: String,
+      endDate: String
+  ): Future[Response] = {
+
+    val start = stringToDate(startDate)
+    val end = stringToDate(endDate)
+
+    // document futures in a constrained date range
+    val tagesschauFuture = repo.getByDateRange(start, end, Tagesschau)
+    val redditFuture = repo.getByDateRange(start, end, Reddit)
+
+    // extract the seq of documents from the futures
+    val allDataFuture: Future[(Seq[AnalyzedPost], Seq[AnalyzedPost])] = for {
+      tagesschauData: Seq[AnalyzedPost] <- tagesschauFuture
+      redditData: Seq[AnalyzedPost] <- redditFuture
     } yield (tagesschauData, redditData)
 
+    // compute statistics for the controller (compare to: https://github.com/SearchTrendAnalyseTool/Documentation/wiki/WebInterface-Documentation)
     allDataFuture.map {
       case (
             tagesschauDocs: Seq[AnalyzedPost],
             redditPosts: Seq[AnalyzedPost]
           ) =>
+        // combine all data together
         val allPosts: Seq[AnalyzedPost] = tagesschauDocs ++ redditPosts
 
         val totalArticles = allPosts.size
         val totalCategories = allPosts.map(_.category).distinct.size
 
+        // building the source structure
         val sources =
           allPosts
             .groupBy(_.source)
@@ -56,6 +73,7 @@ class AggregationService @Inject() (implicit
               val negArticlesPerc: Double =
                 negArticles.toDouble / articleCount * 100.0
 
+              // building the category structure
               val categories = sourcePosts
                 .groupBy(_.category)
                 .map { case (category, categoryPosts) =>
@@ -66,7 +84,7 @@ class AggregationService @Inject() (implicit
                   val negCount: Int =
                     categoryPosts.count(_.result == "negative")
                   val negPerc: Double = negCount.toDouble / count * 100.0
-                  model.Category(
+                  Category(
                     category,
                     count,
                     posCount,
@@ -90,8 +108,8 @@ class AggregationService @Inject() (implicit
               )
             }
             .toSeq
-
-        model.Response(totalArticles, totalCategories, sources)
+        Response(totalArticles, totalCategories, sources)
     }
   }
+
 }
