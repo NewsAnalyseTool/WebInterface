@@ -44,7 +44,7 @@ class AggregationService @Inject() (implicit
       redditData: Seq[AnalyzedPost] <- redditFuture
     } yield (tagesschauData, redditData)
 
-    // compute statistics for the controller (compare to: https://github.com/SearchTrendAnalyseTool/Documentation/wiki/WebInterface-Documentation)
+    // compute statistics for the controller (https://github.com/SearchTrendAnalyseTool/Documentation/wiki/WebInterface-Documentation)
     allDataFuture.map {
       case (
             tagesschauDocs: Seq[AnalyzedPost],
