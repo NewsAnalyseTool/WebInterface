@@ -13,7 +13,7 @@ export default function SelectionRow({ onUpdate }: SelectionRowProps) {
 
     useEffect(() => {
         console.log("Fetched")
-        fetch(`http://${config.apiIP}:${config.apiPort}/api/data?startDate${"2023-01-01"}&endDate${"2023-12-31"}`)
+        fetch(`http://${config.apiIP}:${config.apiPort}/api/data?startDate=${"2023-01-01"}&endDate=${"2023-12-31"}`)
             .then((response) => response.json())
             .then((data) => onUpdate(data))
             .catch((error) => console.error(error));
