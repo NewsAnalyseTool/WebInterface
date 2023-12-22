@@ -12,7 +12,7 @@ object FrontendRunHook {
       var process: Option[Process] = None
 
       var npmInstall: String = FrontendCommands.dependencyInstall
-      var npmRun: String = FrontendCommands.serve
+      var npmRun: String = FrontendCommands.build
 
       // Windows requires npm commands prefixed with cmd /c
       if (System.getProperty("os.name").toLowerCase().contains("win")) {

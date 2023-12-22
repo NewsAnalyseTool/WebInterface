@@ -5,9 +5,9 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala)
-  // .settings(
-  //   javaOptions += "--add-opens=java.base/java.lang=ALL-UNNAMED"
-  // )
+// .settings(
+//   javaOptions += "--add-opens=java.base/java.lang=ALL-UNNAMED"
+// )
 
 scalaVersion := "2.13.12"
 
