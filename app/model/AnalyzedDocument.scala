@@ -8,9 +8,9 @@ import reactivemongo.api.bson.BSONDocument
 import scala.util.Try
 import reactivemongo.api.bson.BSONDocumentReader
 import reactivemongo.api.bson.BSONString
-import java.util.Date
 import java.text.SimpleDateFormat
 import reactivemongo.api.bson.BSONDateTime
+import java.util.Date
 
 case class AnalyzedPost(
     source: String,
@@ -31,7 +31,6 @@ object AnalyzedPost {
   implicit object AnalyzedPostReader extends BSONDocumentReader[AnalyzedPost] {
 
     override def readDocument(doc: BSONDocument): Try[AnalyzedPost] = {
-      val dateFormat = new SimpleDateFormat("yyyy-MM-dd")
 
       val source: String = doc.getAsTry[String]("source").getOrElse("")
       val title: String = doc.getAsTry[String]("title").getOrElse("")

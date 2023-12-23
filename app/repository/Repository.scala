@@ -16,6 +16,7 @@ import reactivemongo.api.bson.BSONString
 import reactivemongo.api.bson.BSONDateTime
 import java.util.Date
 import model.Source._
+import reactivemongo.api.bson.BSONArray
 
 @Singleton
 class MongoDb @Inject() (implicit

@@ -13,15 +13,16 @@ import model.{
   Category,
   AnalyzedPost,
   SourceResponse,
-  Sentiment
-}
-import model.{
-  TrendRequest,
-  TrendResponse,
-  GlobalTrendRequest,
-  SourceTrendRequest
+  Sentiment,
+  Bar,
+  BarChartResponse
 }
 import java.util.Date
+import scala.collection.immutable
+import scala.collection.MapView
+import play.api.libs.json.OFormat
+import play.api.libs.json.Json
+import java.util.Calendar
 
 @Singleton
 class AggregationService @Inject() (implicit
@@ -120,36 +121,60 @@ class AggregationService @Inject() (implicit
     }
   }
 
-  def aggregateTrend(request: TrendRequest): Future[TrendResponse] = {
-    request match {
-      case globalRequest: GlobalTrendRequest =>
-        aggregateGlobalTrend(globalRequest)
-      case sourceRequest: SourceTrendRequest =>
-        aggregateSourceTrend(sourceRequest)
-    }
+  // collect the trends for all sources
+  def getTrendForEachSource(
+      startDate: String,
+      endDate: String
+  ): Future[Seq[BarChartResponse]] = {
+    val futures: Seq[Future[BarChartResponse]] =
+      sources.map(source => groupByDayAndSentiment(startDate, endDate, source))
+    Future.sequence(futures)
   }
 
-  private def aggregateGlobalTrend(
-      request: GlobalTrendRequest
-  ): Future[TrendResponse] = {
+  def groupByDayAndSentiment(
+      startDate: String,
+      endDate: String,
+      source: Source
+  ): Future[BarChartResponse] = {
 
-    val start = stringToDate(request.startDate)
-    val end = stringToDate(request.endDate)
+    val start = stringToDate(startDate)
+    val end = stringToDate(endDate)
 
-    val dataFutures =
-      sources.map(source => repo.getByDateRange(start, end, source))
+    val dataFuture: Future[Seq[AnalyzedPost]] =
+      repo.getByDateRange(start, end, source)
 
-    // extract the seq of documents from the futures
-    val allDataFuture: Future[Seq[Seq[AnalyzedPost]]] =
-      Future.sequence(dataFutures)
+    dataFuture.map { allData: Seq[AnalyzedPost] =>
+      // combine the data by day
+      val byDate: Map[(Int, Int, Int), Seq[AnalyzedPost]] =
+        allData.groupBy(post => {
+          val timeInMs = post.date.getTime()
+          val calendar = Calendar.getInstance()
+          calendar.setTimeInMillis(timeInMs)
+          (
+            calendar.get(Calendar.DAY_OF_MONTH),
+            calendar.get(Calendar.MONTH) + 1,
+            calendar.get(Calendar.YEAR)
+          )
+        })
 
-    allDataFuture.map {
-      allData: Seq[Seq[AnalyzedPost]] => 
-        
+      // results are grouped by date
+      val bars: Seq[Bar] = byDate.map { case ((day, month, year), posts) =>
+        val groupedByResult: Map[String, Int] =
+          posts
+            .groupBy(_.result)
+            .view
+            .mapValues(_.size)
+            .toMap
+
+        val bar: Bar = Bar(
+          date = s"$year-$month-$day",
+          groupedByResult.get(Sentiment.positive).getOrElse(0),
+          groupedByResult.get(Sentiment.negative).getOrElse(0),
+          groupedByResult.get(Sentiment.neutral).getOrElse(0)
+        )
+        bar
+      }.toSeq
+      BarChartResponse(source.toString, bars)
     }
   }
-
-  private def aggregateSourceTrend(
-      request: SourceTrendRequest
-  ): Future[TrendResponse] = {}
 }

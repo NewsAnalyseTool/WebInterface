@@ -7,7 +7,8 @@
 GET     /                                 controllers.FrontendController.index()
 
 GET     /api/data                         controllers.RestController.getData(startDate: String, endDate: String)
-GET     /api/trend                        controllers.RestController.getTrend(startDate: String, endDate: String, source: String, dataType: String, dataValue: String)
+
+GET     /api/trend                        controllers.RestController.getSentimentTrend(startDate: String, endDate: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /*file                      controllers.FrontendController.assetOrDefault(file)
