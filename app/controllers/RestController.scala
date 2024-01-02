@@ -3,14 +3,13 @@ package controllers
 import play.api.libs.json.Json
 import play.api.mvc._
 import service.AggregationService
-import model.TrendRequest
 
 import javax.inject._
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import model.Source
 import model.BarChartResponse
-import model.Response
+import model.GeneralDataResponse
 import play.api.libs.json.JsArray
 
 @Singleton
@@ -25,8 +24,8 @@ class RestController @Inject() (implicit
       endDate: String
   ): Action[AnyContent] =
     Action.async { implicit request: Request[AnyContent] =>
-      aggregationService.aggregateData(startDate, endDate).map {
-        posts: Response =>
+      aggregationService.aggregateGeneralStats(startDate, endDate).map {
+        posts: GeneralDataResponse =>
           Ok(Json.toJson(posts))
       }
     }

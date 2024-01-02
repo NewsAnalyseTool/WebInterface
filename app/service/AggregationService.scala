@@ -9,7 +9,7 @@ import model.Source._
 import reactivemongo.api.bson.BSONDocument
 import model.{
   Source,
-  Response,
+  GeneralDataResponse,
   Category,
   AnalyzedPost,
   SourceResponse,
@@ -40,10 +40,10 @@ class AggregationService @Inject() (implicit
     dateformat.parse(date)
   }
 
-  def aggregateData(
+  def aggregateGeneralStats(
       startDate: String,
       endDate: String
-  ): Future[Response] = {
+  ): Future[GeneralDataResponse] = {
 
     val start = stringToDate(startDate)
     val end = stringToDate(endDate)
@@ -117,7 +117,7 @@ class AggregationService @Inject() (implicit
             )
           }
           .toSeq
-      Response(totalArticles, totalCategories, sources)
+      GeneralDataResponse(totalArticles, totalCategories, sources)
     }
   }
 
@@ -131,7 +131,7 @@ class AggregationService @Inject() (implicit
     Future.sequence(futures)
   }
 
-  def groupByDayAndSentiment(
+  private def groupByDayAndSentiment(
       startDate: String,
       endDate: String,
       source: Source

@@ -34,13 +34,13 @@ object Category {
     Json.format[Category]
 }
 
-case class Response(
+case class GeneralDataResponse(
     totalArticles: Int,
     totalCategories: Int,
     sources: Seq[SourceResponse]
 )
 
-object Response {
-  implicit val analyzedPostFormat: OFormat[Response] =
-    Json.format[Response]
+object GeneralDataResponse {
+  implicit val analyzedPostFormat: OFormat[GeneralDataResponse] =
+    Json.format[GeneralDataResponse]
 }
