@@ -1,38 +1,37 @@
-import { useState, useEffect, Dispatch, SetStateAction } from 'react';
-import { NewsData } from '../../App';
 import './SelectionRow.css'
-import config from '../../../config.json';
 
 interface SelectionRowProps {
-    onUpdate: Dispatch<SetStateAction<NewsData>>;
+    onUpdate: (startDate: string, endDate: string) => void;
 }
 
 export default function SelectionRow({ onUpdate }: SelectionRowProps) {
-    const [startDate, setStartDate] = useState<string>('2023-01-01');
-    const [endDate, setEndDate] = useState<string>('2023-12-31');
-    const [clicked, setClicked] = useState<boolean>(false);
-
-    useEffect(() => {
-        console.log("Fetched")
-        fetch(`http://${config.apiIP}:${config.apiPort}/api/data?startDate=${startDate}&endDate=${endDate}`)
-            .then((response) => response.json())
-            .then((data) => onUpdate(data))
-            .catch((error) => console.error(error));
-    }, [startDate, endDate, clicked, onUpdate]);
-
+    console.log("SelectionRow: Start of function")
+    let startDate: string = '2024-01-01';
+    let endDate: string = '2024-01-01';
 
     return (
         <div className='a'>
             <h2>Visualizing data from</h2>
             <form>
-                <input type='date'></input>
+                <input type='date' value={startDate} onChange={e => {
+                    startDate = e.target.value;
+                    console.log("SelectionRow: New start date");
+                    console.log(startDate);
+                }}></input>
             </form>
             <h2>-</h2>
             <form>
-                <input type='date'></input>
+                <input type='date' value={endDate} onChange={e => {
+                    endDate = e.target.value
+                    console.log("SelectionRow: New end date");
+                    console.log(endDate);
+                }}></input>
             </form>
 
-            <button onClick={() => clicked ? setClicked(false) : setClicked(true)}>↺</button>
+            <button onClick={() => {
+                console.log("SelectionRow: Update button clicked")
+                onUpdate(startDate, endDate)
+            }}>↺</button>
         </div>
     );
 }

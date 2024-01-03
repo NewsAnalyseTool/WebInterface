@@ -16,7 +16,7 @@ export default function GlobalStatsRow({ numTopics, numArticles }: GlobalStatsRo
                 <p>Topics</p>
                 <p>{numTopics}</p>
             </div>
-            <div className="lastt-updated">
+            <div className="last-updated">
                 <p>Last Updated</p>
                 <p>13.12.2023</p>
             </div>

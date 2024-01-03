@@ -4,17 +4,18 @@ Chart.register(ArcElement);
 
 interface SentimentChartProps {
     positives: number;
+    neutrals: number;
     negatives: number;
 }
 
-export default function SentimentChart({ positives, negatives }: SentimentChartProps) {
+export default function SentimentChart({ positives, neutrals ,negatives }: SentimentChartProps) {
     
     const data = {
-        labels: ["Positive", "Negative"],
+        labels: ["Positive", "Neutral", "Negative"],
         datasets: [
             {
-                data: [positives, negatives],
-                backgroundColor: ["#28a745", "#dc3545"],
+                data: [positives, neutrals, negatives],
+                backgroundColor: ["#14AE5C", "#FFCD29", "#F24B22"],
             },
         ],
     };

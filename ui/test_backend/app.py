@@ -1,175 +1,136 @@
-from flask import Flask
+from flask import Flask, jsonify, request
 from flask_cors import CORS
+from datetime import datetime, timedelta
 import random
+import string
+import json
+
+class Category:
+    def __init__(self):
+        self.name = self.random_name(random.randint(2, 10))
+        self.pos = random.randint(1, 15)
+        self.neu = random.randint(1, 15)
+        self.neg = random.randint(1, 15)
+        self.count = self.pos + self.neu + self.neg
+        self.pos_perc = round(((self.pos / self.count) * 100), 2)
+        self.neu_perc = round(((self.neu / self.count) * 100), 2)
+        self.neg_perc = round(((self.neg / self.count) * 100), 2)
+
+    def random_name(self, length):
+        letters = string.ascii_letters
+        random_word = ''.join(random.choice(letters) for _ in range(length))
+        return random_word
+        
+
+class Source:
+    def __init__(self, name):
+        self.name = name
+        self.categories = [Category() for _ in range(random.randint(2, 10))]
+        self.pos_articles = sum(category.pos for category in self.categories)
+        self.neu_articles = sum(category.neu for category in self.categories)
+        self.neg_articles = sum(category.neg for category in self.categories)
+        self.article_count = self.pos_articles + self.neu_articles + self.neg_articles
+        self.pos_articles_perc = round(((self.pos_articles / self.article_count) * 100), 2)
+        self.neu_articles_perc = round(((self.neu_articles / self.article_count) * 100), 2)
+        self.neg_articles_perc = round(((self.neg_articles / self.article_count) * 100), 2)
+
+class Response:
+    def __init__(self):
+        self.red = Source("Reddit")
+        self.nyt = Source("New York Times")
+        self.ts = Source("Tagesschau")
+        self.sources = [self.red, self.nyt, self.ts]
+
+        self.total_articles = self.red.article_count + self.nyt.article_count + self.ts.article_count
+        self.total_categories = len(self.red.categories) + len(self.nyt.categories) + len(self.ts.categories)
+
+        self.red_perc = round(((self.red.article_count / self.total_articles) * 100), 2)
+        self.nyt_perc = round(((self.nyt.article_count / self.total_articles) * 100), 2)
+        self.ts_perc = round(((self.ts.article_count / self.total_articles) * 100), 2)
+
+class TestDataEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Category):
+            return {
+                'name': obj.name,
+                'count': obj.count,
+                'pos': obj.pos,
+                'posPerc': obj.pos_perc,
+                'neu': obj.neu,
+                'neuPerc': obj.neu_perc,
+                'neg': obj.neg,
+                'negPerc': obj.neg_perc
+            }
+        elif isinstance(obj, Source):
+            return {
+                'name': obj.name,
+                'articleCount': obj.article_count,
+                'articlePerc': 10,
+                'categoryCount': len(obj.categories),
+                'posArticles': obj.pos_articles,
+                'posArticlesPerc': obj.pos_articles_perc,
+                'neuArticles': obj.neu_articles,
+                'neuArticlesPerc': obj.neu_articles_perc,
+                'negArticles': obj.neg_articles,
+                'negArticlesPerc': obj.neg_articles_perc,
+                'categories': [self.default(category) for category in obj.categories]
+            }
+        elif isinstance(obj, Response):
+            return {
+                'totalArticles': obj.total_articles,
+                'totalCategories': obj.total_categories,
+                'sources': [self.default(source) for source in obj.sources]
+            }
+        return super(TestDataEncoder, self).default(obj)
 
 app = Flask(__name__)
 CORS(app)
 
-class Category:
-    def __init__(self):
-        self.count = random.randint(1, random.randint(4, 100))
-        self.pos = random.randint(0, self.count)
-        self.pos_perc = round(((self.pos / self.count) * 100), 2)
-        self.neg = self.count - self.pos
-        self.neg_perc = round((100 - self.pos_perc), 2)
-    
-
 # Route for Reddit data
-@app.route("/api", methods=["GET"])
+@app.route("/api/data", methods=["GET"])
 def get_data():
-    g_data = [Category() for _ in range(10)]
-    
-    r_article_count = g_data[0].count + g_data[1].count
-    nyt_article_count = g_data[2].count + g_data[3].count + g_data[4].count + g_data[5].count
-    ts_article_count = g_data[6].count + g_data[7].count + g_data[8].count + g_data[9].count
-    
-    r_pos = g_data[0].pos + g_data[1].pos
-    r_pos_perc = round(((r_pos / r_article_count) * 100), 2)
-    r_neg = g_data[0].neg + g_data[1].neg
-    r_neg_perc = round((100 - r_pos_perc), 2)
-    
-    nyt_pos = g_data[2].pos + g_data[3].pos + g_data[4].pos + g_data[5].pos
-    nyt_pos_perc = round(((nyt_pos / nyt_article_count) * 100), 2)
-    nyt_neg = g_data[2].neg + g_data[3].neg + g_data[4].neg + g_data[5].neg
-    nyt_neg_perc = round((100 - nyt_pos_perc), 2)
-    
-    ts_pos = g_data[6].pos + g_data[7].pos + g_data[8].pos + g_data[9].pos
-    ts_pos_perc = round(((ts_pos / ts_article_count) * 100), 2)
-    ts_neg = g_data[6].neg + g_data[7].neg + g_data[8].neg + g_data[9].neg
-    ts_neg_perc = round((100 - ts_pos_perc), 2)
-    
-    r_ctgry_count = 2
-    nyt_ctgry_count = 4
-    ts_ctgry_count = 4
-    
-    total_articles = r_article_count + nyt_article_count + ts_article_count
-    total_categories = r_ctgry_count + nyt_ctgry_count + ts_ctgry_count
-    
-    r_article_perc = round(((r_article_count / total_articles) * 100), 2)
-    nyt_article_perc = round(((nyt_article_count / total_articles) * 100), 2)
-    ts_article_perc = round(((ts_article_count / total_articles) * 100), 2)
-    
-    response_data = {
-        "totalArticles" : total_articles,
-        "totalCategories" : total_categories,
-        "sources": [
-            {
-                "name": "Reddit",
-                "articleCount": r_article_count,
-                "articlePerc" : r_article_perc,
-                "categoryCount": r_ctgry_count,
-                "posArticles": r_pos,
-                "posArticlesPerc": r_pos_perc,
-                "negArticles": r_neg,
-                "negArticlesPerc": r_neg_perc,
-                "categories": [
-                    {
-                        "name": "r/politics",
-                        "count": g_data[0].count,
-                        "pos": g_data[0].pos,
-                        "posPerc": g_data[0].pos_perc,
-                        "neg": g_data[0].neg,
-                        "negPerc": g_data[0].neg_perc
+    return jsonify(TestDataEncoder().default(Response()))
 
-                    },
-                    {
-                        "name": "r/news",
-                        "count": g_data[1].count,
-                        "pos": g_data[1].pos,
-                        "posPerc": g_data[1].pos_perc,
-                        "neg": g_data[1].neg,
-                        "negPerc": g_data[1].neg_perc
-                    }
-            ]},
-            {
-                "name": "New York Times",
-                "articleCount": nyt_article_count,
-                "articlePerc" : nyt_article_perc,
-                "categoryCount": nyt_ctgry_count,
-                "posArticles": nyt_pos,
-                "posArticlesPerc": nyt_pos_perc,
-                "negArticles": nyt_neg,
-                "negArticlesPerc": nyt_neg_perc,
-                "categories": [
-                    {
-                        "name": "Politics",
-                        "count": g_data[2].count,
-                        "pos": g_data[2].pos,
-                        "posPerc": g_data[2].pos_perc,
-                        "neg": g_data[2].neg,
-                        "negPerc": g_data[2].neg_perc
-                    },
-                    {
-                        "name": "Economy",
-                        "count": g_data[3].count,
-                        "pos": g_data[3].pos,
-                        "posPerc": g_data[3].pos_perc,
-                        "neg": g_data[3].neg,
-                        "negPerc": g_data[3].neg_perc
-                    },
-                    {
-                        "name": "Technology",
-                        "count": g_data[4].count,
-                        "pos": g_data[4].pos,
-                        "posPerc": g_data[4].pos_perc,
-                        "neg": g_data[4].neg,
-                        "negPerc": g_data[4].neg_perc
-                    },
-                    {
-                        "name": "Sports",
-                        "count": g_data[5].count,
-                        "pos": g_data[5].pos,
-                        "posPerc": g_data[5].pos_perc,
-                        "neg": g_data[5].neg,
-                        "negPerc": g_data[5].neg_perc
-                    }
-            ]},
-            {
-                "name": "Tagesschau",
-                "articleCount": ts_article_count,
-                "articlePerc" : ts_article_perc,
-                "categoryCount": ts_ctgry_count,
-                "posArticles": ts_pos,
-                "posArticlesPerc": ts_pos_perc,
-                "negArticles": ts_neg,
-                "negArticlesPerc": ts_neg_perc,
-                "categories": [
-                    {
-                        "name": "Military", 
-                        "count": g_data[6].count,
-                        "pos": g_data[6].pos,
-                        "posPerc": g_data[6].pos_perc,
-                        "neg": g_data[6].neg,
-                        "negPerc": g_data[6].neg_perc
-                    },
-                    {
-                        "name": "Corona", 
-                        "count": g_data[7].count,
-                        "pos": g_data[7].pos,
-                        "posPerc": g_data[7].pos_perc,
-                        "neg": g_data[7].neg,
-                        "negPerc": g_data[7].neg_perc
-                    },
-                    {
-                        "name": "Elections", 
-                        "count": g_data[8].count,
-                        "pos": g_data[8].pos,
-                        "posPerc": g_data[8].pos_perc,
-                        "neg": g_data[8].neg,
-                        "negPerc": g_data[8].neg_perc
-                    },
-                    {
-                        "name": "Football", 
-                        "count": g_data[9].count,
-                        "pos": g_data[9].pos,
-                        "posPerc": g_data[9].pos_perc,
-                        "neg": g_data[9].neg,
-                        "negPerc": g_data[9].neg_perc
-                    }
-            ]}
-        ]
-    }
-    return response_data
+##############################################################
+
+class Day:
+    def __init__(self, date):
+        self.date = date
+        self.pos = random.randint(0, 15)
+        self.neu = random.randint(0, 15)
+        self.neg = random.randint(0, 15)
+
+class Timeline:
+    def __init__(self):
+        start_date = datetime(2023, 1, 1)
+        end_date = datetime(2023, 1, 31)
+        current_date = start_date
+        self.days = []
+
+        while current_date <= end_date:
+            formatted_date = current_date.strftime('%Y-%m-%d')
+            self.days.append(Day(formatted_date))
+            current_date += timedelta(days=1)
+
+
+class TestTrendEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Day):
+            return {
+                'date': obj.date,
+                'pos': obj.pos,
+                'neu': obj.neu,
+                'neg': obj.neg,
+            }
+        elif isinstance(obj, Timeline):
+            return {
+                'timeline': [self.default(day) for day in obj.days]
+            }
+        return super(TestTrendEncoder, self).default(obj)
+
+@app.route("/api/trend", methods=["GET"])
+def get_trend():
+    return jsonify(TestTrendEncoder().default(Timeline()))
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)

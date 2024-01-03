@@ -1,5 +1,6 @@
-import { Source } from '../../App';
+import { Source, TrendData } from '../../App';
 import SentimentChart from '../SentimentChart/SentimentChart';
+import SentimentTrendChart from '../SentimentTrendChart/SentimentTrendChart';
 import TopicPieChart from '../TopicPieChart/TopicPieChart';
 import './NewsSourceElement.css';
 
@@ -55,7 +56,13 @@ function DoubleDataBox({ dataName, data1Value, data1Postfix, data2Value, data2Po
     )
 }
 
-export default function NewsSourceElement(source: Source) {
+interface NewsSourceElementProps {
+    source: Source;
+    trendData: TrendData;
+}
+
+export default function NewsSourceElement({ source, trendData }: NewsSourceElementProps) {
+
     return (
         <div className="container">
             <div className="source-name rounded-box">
@@ -76,7 +83,7 @@ export default function NewsSourceElement(source: Source) {
             <div className="sentiment-chart-div  rounded-box">
                 <h2>Sentiment</h2>
                 <div className='sentiment-chart'>
-                    <SentimentChart positives={source.posArticles} negatives={source.negArticles} />
+                    <SentimentChart positives={source.posArticles} neutrals={source.neuArticles} negatives={source.negArticles} />
                 </div>
             </div>
 
@@ -122,6 +129,13 @@ export default function NewsSourceElement(source: Source) {
                     dataValue={source.categoryCount}
                     dataPostfix=''
                     girdArea='single-data-box' />
+            </div>
+
+            <div className="sentiment-trend-div  rounded-box">
+                <h2>Sentiment Trend</h2>
+                <div className='sentiment-trend-chart'>
+                    <SentimentTrendChart {...trendData}/>
+                </div>
             </div>
 
         </div>
