@@ -1,26 +1,19 @@
 @import '../../constants.css';
 
-.selection-row-box {
+.a {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 40px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
-.selection-row-text-box {
-    display: flex;
+h2 {
+    margin-right: 20px;
 }
 
-select {
-    margin-left: 20px;
-    margin-top: auto;
-    margin-bottom: auto;
-    height: 40px;
-    color: var(--text);
-    font-size: 16pt;
-    font-weight: bold;
-    background-color: var(--secondary);
-    border-radius: 20px;
-    border: 0;
+input {
+    font-size: 20px;
+    margin-right: 20px;
 }
 
 button {

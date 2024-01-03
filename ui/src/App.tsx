@@ -38,22 +38,21 @@ export default function App() {
     return (
         <div className="App">
             <Header />
-            <div className="content">
-	    	<div className="selection-row">
-                	<SelectionRow onUpdate={setNewsData}/>
-		</div>
+            <div>
+                <div>
+                    <SelectionRow onUpdate={setNewsData}/>
+                </div>
+            
+                <div>
+                    <GlobalStatsRow numArticles={newsData.totalArticles} numTopics={newsData.totalCategories}/>
+                </div>
 
-	    	<div className="global-stats-row">
-                	<GlobalStatsRow numArticles={newsData.totalArticles} numTopics={newsData.totalCategories}/>
-		</div>
-
-	    	<div className="sources-stats-row">
-                	<div>
-                    		{newsData.sources.map(source => (
-                        		<NewsSourceElement {...source} />
-                   		))}
-                	</div>
-		</div>
+                <div>
+                    <div>
+                        {newsData.sources.map(source => (
+                            <NewsSourceElement {...source} /> ))}
+                    </div>
+                </div>
             </div>
             <Footer />
         </div>

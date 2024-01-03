@@ -10,7 +10,6 @@
         "source-name source-name categories-chart categories-chart sentiment-chart sentiment-chart num-articles"
         "categories categories categories-chart categories-chart sentiment-chart sentiment-chart article-ratio"
         "categories categories categories-chart categories-chart sentiment-pos sentiment-neg num-topics";
-    width: 1019px;
     height: 284px;
     margin-bottom: 20px;
 }

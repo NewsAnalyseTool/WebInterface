@@ -8,30 +8,30 @@ interface SelectionRowProps {
 }
 
 export default function SelectionRow({ onUpdate }: SelectionRowProps) {
-    const [timestamp, setTimestamp] = useState<string>('this_week');
+    const [startDate, setStartDate] = useState<string>('2023-01-01');
+    const [endDate, setEndDate] = useState<string>('2023-12-31');
     const [clicked, setClicked] = useState<boolean>(false);
 
     useEffect(() => {
         console.log("Fetched")
-        fetch(`http://${config.apiIP}:${config.apiPort}/api/data?startDate=${"2023-01-01"}&endDate=${"2023-12-31"}`)
+        fetch(`http://${config.apiIP}:${config.apiPort}/api/data?startDate=${startDate}&endDate=${endDate}`)
             .then((response) => response.json())
             .then((data) => onUpdate(data))
             .catch((error) => console.error(error));
-    }, [timestamp, clicked, onUpdate]);
+    }, [startDate, endDate, clicked, onUpdate]);
 
 
     return (
-        <div className='selection-row-box'>
-            <div className='selection-row-text-box'>
-                <h2>Visualizing Data from</h2>
+        <div className='a'>
+            <h2>Visualizing data from</h2>
+            <form>
+                <input type='date'></input>
+            </form>
+            <h2>-</h2>
+            <form>
+                <input type='date'></input>
+            </form>
 
-                <select value={timestamp} onChange={e => setTimestamp(e.target.value)}>
-                    <option value={'today'}>Today</option>
-                    <option value={'lastSevenDays'}>Last 7 Days</option>
-                    <option value={'thisMonth'}>This Month</option>
-                    <option value={'thisYear'}>This Year</option>
-                </select>
-            </div>
             <button onClick={() => clicked ? setClicked(false) : setClicked(true)}>↺</button>
         </div>
     );

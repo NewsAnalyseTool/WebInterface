@@ -6,34 +6,3 @@ body {
     background-color: var(--background);
     color: var(--text);
 }
-
-
-.App {
-    text-align: center;
-}
-
-.content {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 0px 0px;
-    grid-template-areas:
-    	"selection-row"
-	"global-stats-row"
-	"sources-stats-row";
-    margin-bottom: 100px;
-    justify-items: center;
-}
-
-.selection-row {
-    width: 100%;
-    grid-area: selection-row;
-}
-
-.global-stats-row {
-    grid-area: global-stats-row;
-}
-
-.sources-stats-row {
-    grid-area: sources-stats-row;
-}
