@@ -14,7 +14,7 @@ scalaVersion := "2.13.12"
 libraryDependencies ++= Seq(
   guice,
   "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,
-  "org.reactivemongo" %% "play2-reactivemongo" % "1.0.9-play28"
+  "org.reactivemongo" %% "play2-reactivemongo" % "1.1.0.play29-RC12"
 )
 
 import play.sbt.routes.RoutesKeys
