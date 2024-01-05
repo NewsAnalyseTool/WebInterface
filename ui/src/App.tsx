@@ -48,15 +48,20 @@ export interface TrendData {
 
 export default function App() {
     let startDate: string = '2023-01-01';
-    let endDate: string = '2023-01-01';
+    let endDate: string = '2023-12-31';
     const [newsData, setNewsData] = useState<NewsData>({ totalArticles: 0, totalCategories: 0, sources: [] });
     const [trendData, setTrendData] = useState<TrendData>({ timeline: [] });
 
+    
     function onTimeSpanUpdate(newStartDate: string, newEndDate: string) {
         console.log("App: Got new time span")
         startDate = newStartDate;
         endDate = newEndDate;
 
+	requestGeneralData();
+    }
+
+    function requestGeneralData() {
         console.log("App: Requesting the backend for general data with the url:")
         const url: string = `http://${config.apiIP}:${config.apiPort}/api/data?startDate=${startDate}&endDate=${endDate}`;
         console.log(url)
@@ -69,7 +74,9 @@ export default function App() {
         console.log(newsData)
     }
 
+
     useEffect(() => {
+        requestGeneralData(); 
         console.log("App: UseEffect triggered. Requesting the backend for trend data with the url:")
         const url: string = `http://${config.apiIP}:${config.apiPort}/api/trend?startDate=${startDate}&endDate=${endDate}&source=${"reddit"}`;
         console.log(url)
