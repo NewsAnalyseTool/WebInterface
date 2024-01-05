@@ -14,7 +14,7 @@ import model.{
   AnalyzedPost,
   SourceResponse,
   Sentiment,
-  Bar,
+  Datapoint,
   BarChartResponse
 }
 import java.util.Date
@@ -32,7 +32,7 @@ class AggregationService @Inject() (implicit
 
   // change to all sources in production
   // val sources: Seq[Value] = Source.values.toSeq
-  private val sources = Seq(Reddit, Tagesschau)
+  private val sources = Seq(Tagesschau)
 
   // convert string to Date object
   def stringToDate(date: String): Date = {
@@ -117,6 +117,7 @@ class AggregationService @Inject() (implicit
             )
           }
           .toSeq
+      println(totalArticles, totalCategories, sources.size)
       GeneralDataResponse(totalArticles, totalCategories, sources)
     }
   }
@@ -158,7 +159,7 @@ class AggregationService @Inject() (implicit
         })
 
       // results are grouped by date
-      val bars: Seq[Bar] = byDate.map { case ((day, month, year), posts) =>
+      val bars: Seq[Datapoint] = byDate.map { case ((day, month, year), posts) =>
         val groupedByResult: Map[String, Int] =
           posts
             .groupBy(_.result)
@@ -166,7 +167,7 @@ class AggregationService @Inject() (implicit
             .mapValues(_.size)
             .toMap
 
-        val bar: Bar = Bar(
+        val bar: Datapoint = Datapoint(
           date = s"$year-$month-$day",
           groupedByResult.get(Sentiment.positive).getOrElse(0),
           groupedByResult.get(Sentiment.negative).getOrElse(0),

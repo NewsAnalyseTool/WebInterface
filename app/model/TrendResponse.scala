@@ -3,14 +3,14 @@ package model
 import play.api.libs.json.OFormat
 import play.api.libs.json.Json
 
-case class Bar(date: String, pos: Int, neg: Int, neut: Int)
+case class Datapoint(date: String, pos: Int, neg: Int, neut: Int)
 
-object Bar {
-  implicit val analyzedPostFormat: OFormat[Bar] =
-    Json.format[Bar]
+object Datapoint {
+  implicit val analyzedPostFormat: OFormat[Datapoint] =
+    Json.format[Datapoint]
 }
 
-case class BarChartResponse(source: String, bars: Seq[Bar])
+case class BarChartResponse(source: String, datapoints: Seq[Datapoint])
 
 object BarChartResponse {
   implicit val analyzedPostFormat: OFormat[BarChartResponse] =
