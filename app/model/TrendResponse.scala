@@ -10,9 +10,9 @@ object Datapoint {
     Json.format[Datapoint]
 }
 
-case class BarChartResponse(source: String, datapoints: Seq[Datapoint])
+case class DatapointChartResponse(source: String, datapoints: Seq[Datapoint])
 
-object BarChartResponse {
-  implicit val analyzedPostFormat: OFormat[BarChartResponse] =
-    Json.format[BarChartResponse]
+object DatapointChartResponse {
+  implicit val analyzedPostFormat: OFormat[DatapointChartResponse] =
+    Json.format[DatapointChartResponse]
 }

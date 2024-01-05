@@ -8,7 +8,7 @@ import javax.inject._
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import model.Source
-import model.BarChartResponse
+import model.DatapointChartResponse
 import model.GeneralDataResponse
 import play.api.libs.json.JsArray
 
@@ -37,7 +37,7 @@ class RestController @Inject() (implicit
     implicit request: Request[AnyContent] =>
       aggregationService
         .getTrendForEachSource(startDate, endDate)
-        .map { responses: Seq[BarChartResponse] =>
+        .map { responses: Seq[DatapointChartResponse] =>
           val jsonResponses: JsArray = Json.toJson(responses).as[JsArray]
           Ok(jsonResponses)
         }

@@ -15,7 +15,7 @@ import model.{
   SourceResponse,
   Sentiment,
   Datapoint,
-  BarChartResponse
+  DatapointChartResponse
 }
 import java.util.Date
 import scala.collection.immutable
@@ -32,7 +32,7 @@ class AggregationService @Inject() (implicit
 
   // change to all sources in production
   // val sources: Seq[Value] = Source.values.toSeq
-  private val sources = Seq(Tagesschau)
+  private val sources = Seq(Tagesschau, Reddit, Bbc)
 
   // convert string to Date object
   def stringToDate(date: String): Date = {
@@ -117,7 +117,6 @@ class AggregationService @Inject() (implicit
             )
           }
           .toSeq
-      println(totalArticles, totalCategories, sources.size)
       GeneralDataResponse(totalArticles, totalCategories, sources)
     }
   }
@@ -126,8 +125,8 @@ class AggregationService @Inject() (implicit
   def getTrendForEachSource(
       startDate: String,
       endDate: String
-  ): Future[Seq[BarChartResponse]] = {
-    val futures: Seq[Future[BarChartResponse]] =
+  ): Future[Seq[DatapointChartResponse]] = {
+    val futures: Seq[Future[DatapointChartResponse]] =
       sources.map(source => groupByDayAndSentiment(startDate, endDate, source))
     Future.sequence(futures)
   }
@@ -136,7 +135,7 @@ class AggregationService @Inject() (implicit
       startDate: String,
       endDate: String,
       source: Source
-  ): Future[BarChartResponse] = {
+  ): Future[DatapointChartResponse] = {
 
     val start = stringToDate(startDate)
     val end = stringToDate(endDate)
@@ -159,23 +158,24 @@ class AggregationService @Inject() (implicit
         })
 
       // results are grouped by date
-      val bars: Seq[Datapoint] = byDate.map { case ((day, month, year), posts) =>
-        val groupedByResult: Map[String, Int] =
-          posts
-            .groupBy(_.result)
-            .view
-            .mapValues(_.size)
-            .toMap
+      val bars: Seq[Datapoint] = byDate.map {
+        case ((day, month, year), posts) =>
+          val groupedByResult: Map[String, Int] =
+            posts
+              .groupBy(_.result)
+              .view
+              .mapValues(_.size)
+              .toMap
 
-        val bar: Datapoint = Datapoint(
-          date = s"$year-$month-$day",
-          groupedByResult.get(Sentiment.positive).getOrElse(0),
-          groupedByResult.get(Sentiment.negative).getOrElse(0),
-          groupedByResult.get(Sentiment.neutral).getOrElse(0)
-        )
-        bar
+          val bar: Datapoint = Datapoint(
+            date = s"$year-$month-$day",
+            groupedByResult.get(Sentiment.positive).getOrElse(0),
+            groupedByResult.get(Sentiment.negative).getOrElse(0),
+            groupedByResult.get(Sentiment.neutral).getOrElse(0)
+          )
+          bar
       }.toSeq
-      BarChartResponse(source.toString, bars)
+      DatapointChartResponse(source.toString, bars)
     }
   }
 }

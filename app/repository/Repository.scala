@@ -30,6 +30,7 @@ class MongoDb @Inject() (implicit
       val collectionName = source match {
         case Reddit     => config.get[String]("source.reddit")
         case Tagesschau => config.get[String]("source.tagesschau")
+        case Bbc        => config.get[String]("source.bbc")
       }
       db.collection(collectionName)
     }
