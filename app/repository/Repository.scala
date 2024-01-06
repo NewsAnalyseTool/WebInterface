@@ -40,7 +40,7 @@ class MongoDb @Inject() (implicit
     getCollection(source)
       .flatMap(
         _.find(BSONDocument())
-          .cursor[AnalyzedPost](ReadPreference.Primary)
+          .cursor[AnalyzedPost](ReadPreference.primaryPreferred)
           .collect[Seq](-1, Cursor.FailOnError[Seq[AnalyzedPost]]())
       )
   }

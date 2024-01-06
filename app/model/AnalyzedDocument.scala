@@ -41,7 +41,8 @@ object AnalyzedPost {
           doc.get("date").get.asInstanceOf[BSONDateTime].value
         )
       val url: String = doc.getAsTry[String]("url").getOrElse("")
-      val result: String = doc.getAsTry[String]("result").getOrElse("")
+      val result: String =
+        doc.getAsTry[String]("result").getOrElse("").toLowerCase
       val positive: Double = doc
         .getAsOpt[BSONString]("positive")
         .map(_.value.toDouble)
