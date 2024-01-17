@@ -1,28 +1,27 @@
 package service
 
-import repository.MongoDb
-import scala.concurrent.ExecutionContext
-import javax.inject._
-import scala.concurrent.Future
-import java.text.SimpleDateFormat
+import model.AnalyzedPost
+import model.Category
+import model.Datapoint
+import model.DatapointChartResponse
+import model.GeneralDataResponse
+import model.Sentiment
+import model.Source
 import model.Source._
-import reactivemongo.api.bson.BSONDocument
-import model.{
-  Source,
-  GeneralDataResponse,
-  Category,
-  AnalyzedPost,
-  SourceResponse,
-  Sentiment,
-  Datapoint,
-  DatapointChartResponse
-}
-import java.util.Date
-import scala.collection.immutable
-import scala.collection.MapView
-import play.api.libs.json.OFormat
+import model.SourceResponse
 import play.api.libs.json.Json
+import play.api.libs.json.OFormat
+import reactivemongo.api.bson.BSONDocument
+import repository.MongoDb
+
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import javax.inject._
+import scala.collection.MapView
+import scala.collection.immutable
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 @Singleton
 class AggregationService @Inject() (implicit
@@ -31,8 +30,7 @@ class AggregationService @Inject() (implicit
 ) {
 
   // change to all sources in production
-  // val sources: Seq[Value] = Source.values.toSeq
-  private val sources = Seq(Tagesschau, Reddit, Bbc)
+  val sources: Seq[Value] = Source.values.toSeq
 
   // convert string to Date object
   def stringToDate(date: String): Date = {

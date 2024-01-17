@@ -21,18 +21,52 @@ import reactivemongo.api.bson.BSONArray
 @Singleton
 class MongoDb @Inject() (implicit
     ec: ExecutionContext,
-    val mongoApi: ReactiveMongoApi,
+    @NamedDatabase("tagesschau") val tagesschauApi: ReactiveMongoApi,
+    @NamedDatabase("reddit") val redditApi: ReactiveMongoApi,
+    @NamedDatabase("bbc") val bbcApi: ReactiveMongoApi,
     val config: Configuration
 ) {
 
   private def getCollection(source: Source): Future[BSONCollection] = {
-    mongoApi.database.map { db =>
-      val collectionName = source match {
-        case Reddit     => config.get[String]("source.reddit")
-        case Tagesschau => config.get[String]("source.tagesschau")
-        case Bbc        => config.get[String]("source.bbc")
-      }
-      db.collection(collectionName)
+    // source match {
+    //   case Reddit =>
+    //     mongoApi.connection
+    //       .database("Reddit")
+    //       .map(_.collection(config.get[String]("source.reddit")))
+    //
+    //   case Tagesschau =>
+    //     mongoApi.connection
+    //       .database("Tagesschau")
+    //       .map(_.collection(config.get[String]("source.tagesschau")))
+    //
+    //   case Bbc =>
+    //     mongoApi.connection
+    //       .database("BBC")
+    //       .map(_.collection(config.get[String]("source.bbc")))
+    // }
+
+    // mongoApi.database.map { db =>
+    //   val dbName = source match {
+    //     case Reddit     => config.get[String]("source.reddit")
+    //     case Tagesschau => config.get[String]("source.tagesschau")
+    //     case Bbc        => config.get[String]("source.bbc")
+    //   }
+    //   db.collection(collectionName)
+    // }
+
+    source match {
+      case Tagesschau =>
+        tagesschauApi.database.map(
+          _.collection("tagesschauAnalysis")
+        )
+      case Bbc =>
+        bbcApi.database.map(
+          _.collection("bbcAnalysis")
+        )
+      case Reddit =>
+        redditApi.database.map(
+          _.collection("redditAnalysis")
+        )
     }
   }
 
@@ -61,7 +95,7 @@ class MongoDb @Inject() (implicit
     getCollection(source)
       .flatMap(
         _.find(query)
-          .cursor[AnalyzedPost](ReadPreference.Primary)
+          .cursor[AnalyzedPost](ReadPreference.primaryPreferred)
           .collect[Seq](-1, Cursor.FailOnError[Seq[AnalyzedPost]]())
       )
   }
