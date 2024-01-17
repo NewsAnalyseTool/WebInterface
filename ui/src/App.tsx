@@ -104,7 +104,7 @@ export default function App() {
                 source.categories = combinedCategories;
             };
 
-            const colors: string[] = ['#FFC7C2', '#BDE3FF', '#AFF4C6', '#E4CCFF']
+            const colors: string[] = ['#FF9086', '#86CCFF', '#78F1A0', '#D0A6FF']
             
             source.categories.map((category, index) => {
                 category.color = colors[index];

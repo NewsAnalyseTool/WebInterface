@@ -72,7 +72,7 @@ export default function NewsSourceElement({ source, trendData }: NewsSourceEleme
             <div className="categories  rounded-box">
                 <h2>Categories</h2>
                 <div className="category_list">
-                    {source.categories.map((category, key) => (
+                    {source.categories.map((category) => (
                         <div className="category_list_item">
                             <div className="category_color" style={{ backgroundColor: category.color }}></div>
                             <p>{category.count}</p>
