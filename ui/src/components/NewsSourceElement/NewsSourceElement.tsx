@@ -71,6 +71,15 @@ export default function NewsSourceElement({ source, trendData }: NewsSourceEleme
 
             <div className="categories  rounded-box">
                 <h2>Categories</h2>
+                <div className="category_list">
+                    {source.categories.map((category, key) => (
+                        <div className="category_list_item">
+                            <div className="category_color" style={{ backgroundColor: category.color }}></div>
+                            <p>{category.count}</p>
+                            <p>{category.name}</p>
+                        </div>
+                    ))}
+                </div>
             </div>
 
             <div className="categories-chart-div  rounded-box">
@@ -93,6 +102,16 @@ export default function NewsSourceElement({ source, trendData }: NewsSourceEleme
                     data1Value={source.posArticles}
                     data1Postfix=''
                     data2Value={source.posArticlesPerc}
+                    data2Postfix='%'
+                    girdArea='double-data-box' />
+            </div>
+
+            <div className="sentiment-neu rounded-box">
+                <DoubleDataBox
+                    dataName='Neutral Articles'
+                    data1Value={source.neuArticles}
+                    data1Postfix=''
+                    data2Value={source.neuArticlesPerc}
                     data2Postfix='%'
                     girdArea='double-data-box' />
             </div>

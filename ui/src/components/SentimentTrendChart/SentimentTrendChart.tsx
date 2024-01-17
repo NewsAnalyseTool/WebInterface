@@ -38,20 +38,9 @@ export default function SentimentTrendChart(trendData: TrendData) {
             {
                 label: 'Posiitve',
                 data: positiveValues,
-                borderColor: 'rgb(20, 150, 255)',
-                backgroundColor: 'rgba(250, 150, 20, 0.5)',
-            },
-            {
-                label: 'Neutral',
-                data: neutralValues,
-                borderColor: 'rgb(150, 255, 20)',
-                backgroundColor: 'rgba(20, 255, 150, 0.5)',
-            },
-            {
-                label: 'Negative',
-                data: negativeValues,
-                borderColor: 'rgb(255, 20, 150)',
-                backgroundColor: 'rgba(150, 20, 255, 0.5)',
+                borderColor: '#14AE5C',
+                pointRadius: 0,
+                borderWidth: 2,
             },
         ],
     };

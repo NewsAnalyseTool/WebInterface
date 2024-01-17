@@ -7,9 +7,9 @@
     gap: 7px 7px;
     grid-auto-flow: row;
     grid-template-areas:
-        "source-name source-name categories-chart categories-chart sentiment-chart sentiment-chart num-articles sentiment-trend-chart sentiment-trend-chart sentiment-trend-chart"
-        "categories categories categories-chart categories-chart sentiment-chart sentiment-chart article-ratio sentiment-trend-chart sentiment-trend-chart sentiment-trend-chart"
-        "categories categories categories-chart categories-chart sentiment-pos sentiment-neg num-topics sentiment-trend-chart sentiment-trend-chart sentiment-trend-chart";
+        "source-name source-name num-articles sentiment-pos categories-chart categories-chart sentiment-chart sentiment-chart sentiment-trend-chart sentiment-trend-chart sentiment-trend-chart"
+        "categories categories article-ratio sentiment-neu categories-chart categories-chart sentiment-chart sentiment-chart sentiment-trend-chart sentiment-trend-chart sentiment-trend-chart"
+        "categories categories num-topics sentiment-neg categories-chart categories-chart sentiment-chart sentiment-chart sentiment-trend-chart sentiment-trend-chart sentiment-trend-chart";
     height: 284px;
     margin-bottom: 7px;
 }
@@ -36,6 +36,7 @@
 
 .rounded-box {
     background-color: var(--secondary);
+    border-radius: 5px;
 }
 
 
@@ -43,7 +44,8 @@
 .source-name {
     grid-area: source-name;
     background-color: var(--primary);
-    border-top-left-radius: 20px;
+    border-radius: 5px;
+
 }
 
 .title-box {
@@ -58,6 +60,23 @@
 .categories {
     grid-area: categories;
     text-align: center;
+}
+
+.category_list_item {
+    display: flex;
+    align-items: center;
+    height: 30px;
+    margin-left: 40px;
+}
+
+.category_list_item div {
+    margin-right: 20px;
+    width: 35px;
+    height: 15px;
+}
+
+.category_list_item p {
+    margin-right: 20px;
 }
 
 /*###################### CATEGORIES CHART ######################*/
@@ -83,9 +102,9 @@
 
 .sentiment-chart {
     position: absolute;
-    height: 200px;
-    width: 200px;
-    bottom: -125px;
+    height: 220px;
+    width: 220px;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
@@ -133,6 +152,6 @@
 }
 
 .sentiment-trend-chart {
-    width: 300px;
+    width: 350px;
     height: 500px;
 }
