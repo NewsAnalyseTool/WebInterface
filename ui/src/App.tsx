@@ -41,11 +41,12 @@ export interface NewsData {
 }
 
 export interface TrendData {
-    timeline: {
+    source: string;
+    datapoints: {
         date: string;
         pos: number;
-        neu: number;
         neg: number;
+        neut: number;
     }[];
 }
 
@@ -55,7 +56,7 @@ export default function App() {
     // ## Use States ##
     // The general news data and the trend data is saved in a useState
     const [newsData, setNewsData] = useState<NewsData>({ totalArticles: 0, totalCategories: 0, sources: [] });
-    const [trendData, setTrendData] = useState<TrendData>({ timeline: [] });
+    const [trendData, setTrendData] = useState<TrendData[]>([]);
 
     // ## Request Functions ##
     async function requestGeneralData(startDate: string, endDate: string) {
@@ -109,18 +110,16 @@ export default function App() {
             source.categories.map((category, index) => {
                 category.color = colors[index];
             });
-
-            setNewsData(receivedData);
         });
 
         
     }
 
-    function requestTrendData(startDate: string, endDate: string) {
+    async function requestTrendData(startDate: string, endDate: string) {
         console.log("App: UseEffect triggered. Requesting the backend for trend data with the url:")
-        const url: string = `http://${config.apiIP}:${config.apiPort}/api/trend?startDate=${startDate}&endDate=${endDate}&source=${"reddit"}`;
+        const url: string = `http://${config.apiIP}:${config.apiPort}/api/trend?startDate=${startDate}&endDate=${endDate}`;
         console.log(url)
-        fetch(url)
+        await fetch(url)
             .then((response) => response.json())
             .then((data) => setTrendData(data))
             .catch((error) => console.error(error));
@@ -135,15 +134,18 @@ export default function App() {
             <div>
                 <div>
                     <SelectionRow onTimeChanged={
-                        (startDate: string, endDate: string) => {
-                            requestGeneralData(startDate, endDate);
-                            requestTrendData(startDate, endDate);
+                        async (startDate: string, endDate: string) => {
+                            await requestGeneralData(startDate, endDate);
+                            console.log("I GOT SOMETHING REALLY IMPOTANT")
+                            console.log(newsData)
+                            await requestTrendData(startDate, endDate);
                         }}/>
                 </div>
             
                 <div className="news-sources">
-                    {newsData.sources.map((source, key) => (
-                        <NewsSourceElement key={key} source={source} trendData={trendData} /> ))}
+                    {newsData.sources.map((source, index) => (
+                        <NewsSourceElement key={index} source={source} trendData={trendData[index]} />
+                        ))}
                 </div>
             </div>
             <Footer />

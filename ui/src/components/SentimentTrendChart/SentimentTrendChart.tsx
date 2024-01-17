@@ -17,14 +17,19 @@ ChartJS.register(
 
 export default function SentimentTrendChart(trendData: TrendData) {
     // Extract data for the chart
-    const labels = trendData.timeline.map(day => day.date);
-    console.log(labels)
-    const positiveValues = trendData.timeline.map(day => day.pos);
-    console.log(positiveValues)
-    const neutralValues = trendData.timeline.map(day => day.neu);
-    console.log(neutralValues)
-    const negativeValues = trendData.timeline.map(day => day.neg);
-    console.log(negativeValues)
+
+    let labels: string[] = []
+    let positiveValues: number[] = []
+    let neutralValues: number[] = []
+    let negativeValues: number[] = []
+
+    if (trendData.datapoints != undefined) {
+        labels = trendData.datapoints.map(day => day.date);
+        positiveValues = trendData.datapoints.map(day => day.pos);
+        neutralValues = trendData.datapoints.map(day => day.neut);
+        negativeValues = trendData.datapoints.map(day => day.neg);
+    }
+    
 
     const options = {
         responsive: true,
@@ -39,6 +44,20 @@ export default function SentimentTrendChart(trendData: TrendData) {
                 label: 'Posiitve',
                 data: positiveValues,
                 borderColor: '#14AE5C',
+                pointRadius: 0,
+                borderWidth: 2,
+            },
+            {
+                label: 'Neutral',
+                data: neutralValues,
+                borderColor: '#FFCD29',
+                pointRadius: 0,
+                borderWidth: 2,
+            },
+            {
+                label: 'Negative',
+                data: negativeValues,
+                borderColor: '#F24B22',
                 pointRadius: 0,
                 borderWidth: 2,
             },

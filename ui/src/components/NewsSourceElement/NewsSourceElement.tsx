@@ -72,11 +72,11 @@ export default function NewsSourceElement({ source, trendData }: NewsSourceEleme
             <div className="categories  rounded-box">
                 <h2>Categories</h2>
                 <div className="category_list">
-                    {source.categories.map((category) => (
-                        <div className="category_list_item">
+                    {source.categories.map((category, key) => (
+                        <div className="category_list_item" key={key}>
                             <div className="category_color" style={{ backgroundColor: category.color }}></div>
                             <p>{category.count}</p>
-                            <p>{category.name}</p>
+                            { category.name === "" ? <p>unknown</p> : <p>{category.name}</p>}
                         </div>
                     ))}
                 </div>
@@ -101,7 +101,7 @@ export default function NewsSourceElement({ source, trendData }: NewsSourceEleme
                     dataName='Positive Articles'
                     data1Value={source.posArticles}
                     data1Postfix=''
-                    data2Value={source.posArticlesPerc}
+                    data2Value={parseFloat(source.posArticlesPerc.toFixed(2))}
                     data2Postfix='%'
                     girdArea='double-data-box' />
             </div>
@@ -109,9 +109,9 @@ export default function NewsSourceElement({ source, trendData }: NewsSourceEleme
             <div className="sentiment-neu rounded-box">
                 <DoubleDataBox
                     dataName='Neutral Articles'
-                    data1Value={source.neuArticles}
+                    data1Value={source.neuArticles == undefined ? NaN : source.neuArticles}
                     data1Postfix=''
-                    data2Value={source.neuArticlesPerc}
+                    data2Value={source.neuArticlesPerc == undefined ? NaN : source.neuArticlesPerc}
                     data2Postfix='%'
                     girdArea='double-data-box' />
             </div>
@@ -121,7 +121,7 @@ export default function NewsSourceElement({ source, trendData }: NewsSourceEleme
                         dataName='Negative Articles'
                         data1Value={source.negArticles}
                         data1Postfix=''
-                        data2Value={source.negArticlesPerc}
+                        data2Value={parseFloat(source.negArticlesPerc.toFixed(2))}
                         data2Postfix='%'
                         girdArea='double-data-box' />
             </div>
@@ -137,7 +137,7 @@ export default function NewsSourceElement({ source, trendData }: NewsSourceEleme
             <div className="article-ratio  rounded-box">
                 <SingleDataBox
                     dataName="Percentage"
-                    dataValue={source.articlePerc}
+                    dataValue={parseFloat(source.articlePerc.toFixed(2))}
                     dataPostfix='%'
                     girdArea='single-data-box' />
             </div>
