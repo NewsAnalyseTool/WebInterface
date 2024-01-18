@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "./App.css";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import SelectionRow from "./components/SelectionRow/SelectionRow";
 import NewsSourceElement from "./components/NewsSourceElement/NewsSourceElement";
-import GlobalStatsRow from "./components/GlobalStatsRow/GlobalStatsRow";
 import config from '../config.json';
+
+
+/*** ------- Type definitions ------- ***/
 
 export interface Category {
     name: string;           // the name of the category (see examples above)
@@ -16,6 +18,7 @@ export interface Category {
     neuPerc: number;        // percentage of neutral articles out of all articles from this source in this category
     neg: number;            // number of articles with negative sentiment
     negPerc: number;        // percentage of negative articles out of all articles from this source in this category
+    color: string;          // the color later used in the charts to represent this category
 }
 export interface Source {
     name: string;               // name of the source (e.g. "New York Times")
@@ -38,72 +41,120 @@ export interface NewsData {
 }
 
 export interface TrendData {
-    timeline: {
+    source: string;
+    datapoints: {
         date: string;
         pos: number;
-        neu: number;
         neg: number;
+        neut: number;
     }[];
 }
 
+/*** ------- Main Component ------- ***/
+
 export default function App() {
-    let startDate: string = '2023-01-01';
-    let endDate: string = '2023-12-31';
+    // ## Use States ##
+    // The general news data and the trend data is saved in a useState
     const [newsData, setNewsData] = useState<NewsData>({ totalArticles: 0, totalCategories: 0, sources: [] });
-    const [trendData, setTrendData] = useState<TrendData>({ timeline: [] });
+    const [trendData, setTrendData] = useState<TrendData[]>([]);
 
-    
-    function onTimeSpanUpdate(newStartDate: string, newEndDate: string) {
-        console.log("App: Got new time span")
-        startDate = newStartDate;
-        endDate = newEndDate;
+    let responseNewsData: NewsData = { totalArticles: 0, totalCategories: 0, sources: [] };
+    let responseTrendData: TrendData[] = [];
 
-	requestGeneralData();
-    }
-
-    function requestGeneralData() {
+    // ## Request Functions ##
+    async function requestGeneralData(startDate: string, endDate: string) {
         console.log("App: Requesting the backend for general data with the url:")
         const url: string = `http://${config.apiIP}:${config.apiPort}/api/data?startDate=${startDate}&endDate=${endDate}`;
         console.log(url)
-        fetch(url)
+
+        let receivedData: NewsData = { totalArticles: 0, totalCategories: 0, sources: [] };
+
+        await fetch(url)
             .then((response) => response.json())
-            .then((data) => setNewsData(data))
+            .then((data) => receivedData = data)
             .catch((error) => console.error(error));
 
         console.log("App: Fetched general data:")
         console.log(newsData)
+
+        receivedData.sources.map(source => {
+            let sortedCategories: Category[] = source.categories.sort((a: Category, b: Category) => b.count - a.count);
+
+            const numberDetailedCategories: number = 3
+            if (sortedCategories.length > numberDetailedCategories) {
+                let top5: Category[] = sortedCategories.slice(0, numberDetailedCategories);
+                let rest: Category[] = sortedCategories.slice(numberDetailedCategories);
+
+                let sumOfrest: number = rest.reduce((sum, category) => sum + category.count, 0);
+                let pos: number = rest.reduce((sum, category) => sum + category.pos, 0);
+                let posPerc: number = rest.reduce((sum, category) => sum + category.posPerc, 0);
+                let neu: number = rest.reduce((sum, category) => sum + category.neu, 0);
+                let neuPerc: number = rest.reduce((sum, category) => sum + category.neuPerc, 0);
+                let neg: number = rest.reduce((sum, category) => sum + category.neg, 0);
+                let negPerc: number = rest.reduce((sum, category) => sum + category.negPerc, 0);
+
+                let combinedCategories: Category[] = [...top5, { 
+                    name: "Others",
+                    count: sumOfrest,
+                    pos: pos,
+                    posPerc: posPerc,
+                    neu: neu,
+                    neuPerc: neuPerc,
+                    neg: neg,
+                    negPerc: negPerc,
+                    color: "red"
+                } ]
+
+                source.categories = combinedCategories;
+            };
+
+            const colors: string[] = ['#FF9086', '#86CCFF', '#78F1A0', '#D0A6FF']
+            
+            source.categories.map((category, index) => {
+                category.color = colors[index];
+            });
+
+            responseNewsData = receivedData;
+        });
+
+        
     }
 
-
-    useEffect(() => {
-        requestGeneralData(); 
+    async function requestTrendData(startDate: string, endDate: string) {
         console.log("App: UseEffect triggered. Requesting the backend for trend data with the url:")
-        const url: string = `http://${config.apiIP}:${config.apiPort}/api/trend?startDate=${startDate}&endDate=${endDate}&source=${"reddit"}`;
+        const url: string = `http://${config.apiIP}:${config.apiPort}/api/trend?startDate=${startDate}&endDate=${endDate}`;
         console.log(url)
-        fetch(url)
+        await fetch(url)
             .then((response) => response.json())
-            .then((data) => setTrendData(data))
+            .then((data) => responseTrendData = data)
             .catch((error) => console.error(error));
 
         console.log("App: Fetched trend data:")
         console.log(trendData);
-    }, []);
+    }
 
     return (
         <div className="App">
             <Header />
             <div>
                 <div>
-                    <SelectionRow onUpdate={onTimeSpanUpdate}/>
+                    <SelectionRow onTimeChanged={
+                        async (startDate: string, endDate: string) => {
+                            await requestGeneralData(startDate, endDate);
+                            console.log("I GOT SOMETHING REALLY IMPOTANT")
+                            console.log(newsData)
+                            await requestTrendData(startDate, endDate);
+
+                            setTrendData(responseTrendData);
+                            setNewsData(responseNewsData);
+                            
+                        }}/>
                 </div>
             
-                <div>
-                    <GlobalStatsRow numArticles={newsData.totalArticles} numTopics={newsData.totalCategories}/>
-                </div>
-
                 <div className="news-sources">
-                    {newsData.sources.map((source, key) => (
-                        <NewsSourceElement key={key} source={source} trendData={trendData} /> ))}
+                    {newsData.sources.map((source, index) => (
+                        <NewsSourceElement key={index} source={source} trendData={trendData[index]} />
+                        ))}
                 </div>
             </div>
             <Footer />
