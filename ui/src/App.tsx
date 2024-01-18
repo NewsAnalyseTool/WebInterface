@@ -58,6 +58,9 @@ export default function App() {
     const [newsData, setNewsData] = useState<NewsData>({ totalArticles: 0, totalCategories: 0, sources: [] });
     const [trendData, setTrendData] = useState<TrendData[]>([]);
 
+    let responseNewsData: NewsData = { totalArticles: 0, totalCategories: 0, sources: [] };
+    let responseTrendData: TrendData[] = [];
+
     // ## Request Functions ##
     async function requestGeneralData(startDate: string, endDate: string) {
         console.log("App: Requesting the backend for general data with the url:")
@@ -110,6 +113,8 @@ export default function App() {
             source.categories.map((category, index) => {
                 category.color = colors[index];
             });
+
+            responseNewsData = receivedData;
         });
 
         
@@ -121,7 +126,7 @@ export default function App() {
         console.log(url)
         await fetch(url)
             .then((response) => response.json())
-            .then((data) => setTrendData(data))
+            .then((data) => responseTrendData = trendData)
             .catch((error) => console.error(error));
 
         console.log("App: Fetched trend data:")
@@ -139,6 +144,10 @@ export default function App() {
                             console.log("I GOT SOMETHING REALLY IMPOTANT")
                             console.log(newsData)
                             await requestTrendData(startDate, endDate);
+
+                            setTrendData(responseTrendData);
+                            setNewsData(responseNewsData);
+                            
                         }}/>
                 </div>
             
