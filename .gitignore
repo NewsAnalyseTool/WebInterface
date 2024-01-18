@@ -15,3 +15,4 @@ conf/db.conf
 /.settings
 /RUNNING_PID
 conf/application.conf
+conf/secret.conf
