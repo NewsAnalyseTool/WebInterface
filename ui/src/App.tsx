@@ -126,7 +126,7 @@ export default function App() {
         console.log(url)
         await fetch(url)
             .then((response) => response.json())
-            .then((data) => responseTrendData = trendData)
+            .then((data) => responseTrendData = data)
             .catch((error) => console.error(error));
 
         console.log("App: Fetched trend data:")
