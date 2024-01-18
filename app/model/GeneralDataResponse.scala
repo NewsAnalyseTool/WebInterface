@@ -10,6 +10,8 @@ case class SourceResponse(
     categoryCount: Int,
     posArticles: Int,
     posArticlesPerc: Double,
+    neuArticles: Int,
+    neuArticlesPerc: Double,
     negArticles: Int,
     negArticlesPerc: Double,
     categories: Seq[Category]

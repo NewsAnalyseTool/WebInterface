@@ -14,14 +14,14 @@ import play.api.libs.json.OFormat
 import reactivemongo.api.bson.BSONDocument
 import repository.MongoDb
 
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
 import javax.inject._
 import scala.collection.MapView
 import scala.collection.immutable
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
+import java.text.SimpleDateFormat
+import java.util.Date
 
 @Singleton
 class AggregationService @Inject() (implicit
@@ -68,17 +68,20 @@ class AggregationService @Inject() (implicit
           .map { case (source, sourcePosts: Seq[AnalyzedPost]) =>
             val articleCount: Int = sourcePosts.size
             val articlePerc: Double =
-              articleCount.toDouble / totalArticles * 100.0
-
+              round(articleCount.toDouble / totalArticles * 100.0)
             val categoryCount = sourcePosts.map(_.category).distinct.size
             val posArticles: Int =
               sourcePosts.count(_.result == Sentiment.positive)
             val posArticlesPerc: Double =
-              posArticles.toDouble / articleCount * 100.0
+              round(posArticles.toDouble / articleCount * 100.0)
+            val neuArticles: Int =
+              sourcePosts.count(_.result == Sentiment.neutral)
+            val neuArticlesPerc: Double =
+              round(neuArticles.toDouble / articleCount * 100.0)
             val negArticles: Int =
               sourcePosts.count(_.result == Sentiment.negative)
             val negArticlesPerc: Double =
-              negArticles.toDouble / articleCount * 100.0
+              round(negArticles.toDouble / articleCount * 100.0)
 
             // building the category structure
             val categories = sourcePosts
@@ -109,6 +112,8 @@ class AggregationService @Inject() (implicit
               categoryCount = categoryCount,
               posArticles = posArticles,
               posArticlesPerc = posArticlesPerc,
+              neuArticles = neuArticles,
+              neuArticlesPerc = neuArticlesPerc,
               negArticles = negArticles,
               negArticlesPerc = negArticlesPerc,
               categories = categories
@@ -117,6 +122,10 @@ class AggregationService @Inject() (implicit
           .toSeq
       GeneralDataResponse(totalArticles, totalCategories, sources)
     }
+  }
+
+  private def round(number: Double): Double = {
+    BigDecimal(number).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
   }
 
   // collect the trends for all sources
@@ -143,7 +152,7 @@ class AggregationService @Inject() (implicit
 
     dataFuture.map { allData: Seq[AnalyzedPost] =>
       // combine the data by day
-      val byDate: Map[(Int, Int, Int), Seq[AnalyzedPost]] =
+      val byDate: Map[(Int, Int, Int, Long), Seq[AnalyzedPost]] =
         allData.groupBy(post => {
           val timeInMs = post.date.getTime()
           val calendar = Calendar.getInstance()
@@ -151,13 +160,14 @@ class AggregationService @Inject() (implicit
           (
             calendar.get(Calendar.DAY_OF_MONTH),
             calendar.get(Calendar.MONTH) + 1,
-            calendar.get(Calendar.YEAR)
+            calendar.get(Calendar.YEAR),
+            timeInMs
           )
         })
 
       // results are grouped by date
-      val bars: Seq[Datapoint] = byDate.map {
-        case ((day, month, year), posts) =>
+      val bars: Seq[Datapoint] = byDate
+        .map { case ((day, month, year, timeInMs), posts) =>
           val groupedByResult: Map[String, Int] =
             posts
               .groupBy(_.result)
@@ -169,10 +179,13 @@ class AggregationService @Inject() (implicit
             date = s"$year-$month-$day",
             groupedByResult.get(Sentiment.positive).getOrElse(0),
             groupedByResult.get(Sentiment.negative).getOrElse(0),
-            groupedByResult.get(Sentiment.neutral).getOrElse(0)
+            groupedByResult.get(Sentiment.neutral).getOrElse(0),
+            timeInMs
           )
           bar
-      }.toSeq
+        }
+        .toSeq
+        .sortBy(_.timeInMs)
       DatapointChartResponse(source.toString, bars)
     }
   }

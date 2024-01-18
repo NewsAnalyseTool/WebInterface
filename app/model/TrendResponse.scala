@@ -3,7 +3,13 @@ package model
 import play.api.libs.json.OFormat
 import play.api.libs.json.Json
 
-case class Datapoint(date: String, pos: Int, neg: Int, neut: Int)
+case class Datapoint(
+    date: String,
+    pos: Int,
+    neg: Int,
+    neut: Int,
+    timeInMs: Long
+)
 
 object Datapoint {
   implicit val analyzedPostFormat: OFormat[Datapoint] =
