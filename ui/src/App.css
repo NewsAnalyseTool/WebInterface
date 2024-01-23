@@ -7,8 +7,19 @@ body {
     color: var(--text);
 }
 
-.news-sources {
+.main-content {
     width: 1900px;
     margin: auto;
     margin-bottom: 50px;
+}
+
+.selection-row-div {
+    margin-bottom: 30px;
+}
+
+.main-divider {
+    border: 1px;
+    border-style: solid;
+    border-color: var(--accent);
+    margin-bottom: 80px;
 }

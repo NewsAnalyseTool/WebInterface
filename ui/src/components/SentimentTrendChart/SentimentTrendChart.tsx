@@ -4,9 +4,9 @@ import {
     LinearScale,
     PointElement,
     LineElement,
-  } from 'chart.js';
-import { Line } from 'react-chartjs-2';
+} from 'chart.js';
 import { TrendData } from "../../App";
+import { LineChart } from '@mui/x-charts';
 
 ChartJS.register(
     CategoryScale,
@@ -24,47 +24,73 @@ export default function SentimentTrendChart(trendData: TrendData) {
     let negativeValues: number[] = []
 
     if (trendData.datapoints != undefined) {
-        labels = trendData.datapoints.map(day => day.date);
-        positiveValues = trendData.datapoints.map(day => day.pos);
-        neutralValues = trendData.datapoints.map(day => day.neut);
-        negativeValues = trendData.datapoints.map(day => day.neg);
+        const aggregatedData: { [date: string]: {
+            pos: number
+            neu: number
+            neg: number
+        } } = {};
+
+        trendData.datapoints.forEach((datapoint) => {
+            const { date } = datapoint;
+            if (aggregatedData[date] != undefined) {
+                aggregatedData[date].pos += datapoint.pos;
+                aggregatedData[date].neu += datapoint.neut;
+                aggregatedData[date].neg += datapoint.neg;
+            } else {
+                aggregatedData[date] = {
+                    pos: datapoint.pos,
+                    neu: datapoint.neut,
+                    neg: datapoint.neg
+                }
+            }
+        })
+
+        const resultArray: { date: string; pos: number; neu: number, neg: number }[] = Object.keys(aggregatedData).map(
+            (date) => ({
+              date,
+              pos: aggregatedData[date].pos,
+              neu: aggregatedData[date].neu,
+              neg: aggregatedData[date].neg,
+            })
+        );
+
+        labels = resultArray.map((item) => item.date);
+        positiveValues = resultArray.map((item) => item.pos);
+        neutralValues = resultArray.map((item) => item.neu);
+        negativeValues = resultArray.map((item) => item.neg);
     }
-    
-
-    const options = {
-        responsive: true,
-      };
-
-    // Data for the pie chart
-
-    const data = {
-        labels: labels,
-        datasets: [
-            {
-                label: 'Posiitve',
-                data: positiveValues,
-                borderColor: '#14AE5C',
-                pointRadius: 0,
-                borderWidth: 2,
-            },
-            {
-                label: 'Neutral',
-                data: neutralValues,
-                borderColor: '#FFCD29',
-                pointRadius: 0,
-                borderWidth: 2,
-            },
-            {
-                label: 'Negative',
-                data: negativeValues,
-                borderColor: '#F24B22',
-                pointRadius: 0,
-                borderWidth: 2,
-            },
-        ],
-    };
 
     return (
-        <Line options={options} data={data}/>
+        //<Line options={options} data={data}/>
+
+        <LineChart
+            xAxis={[{ 
+                scaleType: 'band',
+                data: labels,
+            }]}
+            colors={["#14AE5C", "#FFCD29", "#F24B22"]}
+            series={[
+                {
+                    curve: 'linear',
+                    label: 'positive',
+                    showMark: false,
+                    data: positiveValues,
+                },
+                {
+                    curve: 'linear',
+                    label: 'neutral',
+                    showMark: false,
+                    data: neutralValues,
+                },
+                {
+                    curve: 'linear',
+                    label: 'negative',
+                    showMark: false,
+                    data: negativeValues,
+                },
+            ]}
+            width={1400}
+            height={250}
+        />
     );
 }

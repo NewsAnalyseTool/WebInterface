@@ -1,36 +1,32 @@
 @import '../../constants.css';
 
-.container {
+.news-source-elem-container {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
     gap: 7px 7px;
     grid-auto-flow: row;
     grid-template-areas:
-        "source-name source-name num-articles sentiment-pos categories-chart categories-chart sentiment-chart sentiment-chart sentiment-trend-chart sentiment-trend-chart sentiment-trend-chart"
-        "categories categories article-ratio sentiment-neu categories-chart categories-chart sentiment-chart sentiment-chart sentiment-trend-chart sentiment-trend-chart sentiment-trend-chart"
-        "categories categories num-topics sentiment-neg categories-chart categories-chart sentiment-chart sentiment-chart sentiment-trend-chart sentiment-trend-chart sentiment-trend-chart";
+        "source-name source-name num-articles article-ratio num-topics categories-chart categories-chart sentiment-chart sentiment-chart"
+        "categories categories num-articles article-ratio num-topics categories-chart categories-chart sentiment-chart sentiment-chart"
+        "categories categories sentiment-pos sentiment-neu sentiment-neg categories-chart categories-chart sentiment-chart sentiment-chart"
+        "categories categories sentiment-pos sentiment-neu sentiment-neg categories-chart categories-chart sentiment-chart sentiment-chart";
     height: 284px;
     margin-bottom: 7px;
 }
 
-.container h1 {
+.news-source-elem-container h1 {
     font-size: 28px;
     font-weight: 600;
 }
 
-.container h2 {
+.news-source-elem-container h2 {
     font-size: 20px;
     font-weight: 600;
 }
 
-.container h3 {
-    font-size: 13px;
-    font-weight: 400;
-}
-
-.container p {
-    font-size: 18px;
+.news-source-elem-container p {
+    font-size: 20px;
     font-weight: 400;
 }
 
@@ -111,6 +107,7 @@
 
 /*####################### SENTIMENT DATA #######################*/
 .double-data-box {
+    margin-top: 10px;
     text-align: center;
 }
 
@@ -121,12 +118,16 @@
 }
 
 .double-data-inline-values p {
-    margin-top: 0px;
+    margin-top: 5px;
     margin-right: 10px;
 }
 
 .sentiment-pos {
     grid-area: sentiment-pos;
+}
+
+.sentiment-neu {
+    grid-area: sentiment-neu;
 }
 
 .sentiment-neg {
@@ -135,7 +136,14 @@
 
 /*######################### SMALL STATS ########################*/
 .single-data-box {
-    text-align: center;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.single-data-box p {
+    margin-top: 5px;
 }
 
 .num-articles {
@@ -148,16 +156,4 @@
 
 .num-topics {
     grid-area: num-topics;
-}
-
-.sentiment-trend-div {
-    grid-area: sentiment-trend-chart;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.sentiment-trend-chart {
-    width: 350px;
-    height: 500px;
 }

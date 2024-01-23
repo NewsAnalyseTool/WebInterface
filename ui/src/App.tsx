@@ -3,8 +3,9 @@ import "./App.css";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import SelectionRow from "./components/SelectionRow/SelectionRow";
-import NewsSourceElement from "./components/NewsSourceElement/NewsSourceElement";
 import config from '../config.json';
+import NewsSourceElement from "./components/NewsSourceElement/NewsSourceElement";
+import TrendDataElement from "./TrendSourceElement/TrendSourceElement";
 
 
 /*** ------- Type definitions ------- ***/
@@ -54,6 +55,8 @@ export interface TrendData {
 
 export default function App() {
     // ## Use States ##
+    const [compToDisplay, setCompToDisplay] = useState<string>('global');
+
     // The general news data and the trend data is saved in a useState
     const [newsData, setNewsData] = useState<NewsData>({ totalArticles: 0, totalCategories: 0, sources: [] });
     const [trendData, setTrendData] = useState<TrendData[]>([]);
@@ -93,7 +96,7 @@ export default function App() {
                 let neg: number = rest.reduce((sum, category) => sum + category.neg, 0);
                 let negPerc: number = rest.reduce((sum, category) => sum + category.negPerc, 0);
 
-                let combinedCategories: Category[] = [...top5, { 
+                let combinedCategories: Category[] = [...top5, {
                     name: "Others",
                     count: sumOfrest,
                     pos: pos,
@@ -103,13 +106,13 @@ export default function App() {
                     neg: neg,
                     negPerc: negPerc,
                     color: "red"
-                } ]
+                }]
 
                 source.categories = combinedCategories;
             };
 
             const colors: string[] = ['#FF9086', '#86CCFF', '#78F1A0', '#D0A6FF']
-            
+
             source.categories.map((category, index) => {
                 category.color = colors[index];
             });
@@ -117,7 +120,7 @@ export default function App() {
             responseNewsData = receivedData;
         });
 
-        
+
     }
 
     async function requestTrendData(startDate: string, endDate: string) {
@@ -136,25 +139,47 @@ export default function App() {
     return (
         <div className="App">
             <Header />
-            <div>
-                <div>
-                    <SelectionRow onTimeChanged={
-                        async (startDate: string, endDate: string) => {
-                            await requestGeneralData(startDate, endDate);
-                            console.log("I GOT SOMETHING REALLY IMPOTANT")
-                            console.log(newsData)
-                            await requestTrendData(startDate, endDate);
+            <div className="main-content">
+                <div className="selection-row-div">
+                    <SelectionRow
+                        onTimeChanged={
+                            async (startDate: string, endDate: string) => {
+                                await requestGeneralData(startDate, endDate);
+                                console.log("I GOT SOMETHING REALLY IMPOTANT")
+                                console.log(newsData)
+                                await requestTrendData(startDate, endDate);
 
-                            setTrendData(responseTrendData);
-                            setNewsData(responseNewsData);
-                            
-                        }}/>
+                                setTrendData(responseTrendData);
+                                setNewsData(responseNewsData);
+                            }}
+                        onDataSelectionChanged={
+                            (newComp: string) => {
+                                setCompToDisplay(newComp)
+                            }
+                        }
+                        totalArticles={newsData.totalArticles}
+                        totalCategories={newsData.totalCategories}
+                    />
                 </div>
-            
-                <div className="news-sources">
-                    {newsData.sources.map((source, index) => (
-                        <NewsSourceElement key={index} source={source} trendData={trendData[index]} />
-                        ))}
+
+                <div className="main-divider"></div>
+
+                <div>
+                    {(compToDisplay === 'global') ? (
+                        <div>
+                            {newsData.sources.map((source, index) => (
+                                <NewsSourceElement key={index} source={source} />
+                            ))
+                            }
+                        </div>
+                    ) : (
+                        <div>
+                            {trendData.map((source, index) => (
+                                <TrendDataElement key={index} trendData={source} />
+                            ))
+                            }
+                        </div>
+                    )}
                 </div>
             </div>
             <Footer />

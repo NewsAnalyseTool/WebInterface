@@ -1,6 +1,5 @@
-import { Source, TrendData } from '../../App';
+import { Source } from '../../App';
 import SentimentChart from '../SentimentChart/SentimentChart';
-import SentimentTrendChart from '../SentimentTrendChart/SentimentTrendChart';
 import TopicPieChart from '../TopicPieChart/TopicPieChart';
 import './NewsSourceElement.css';
 
@@ -11,7 +10,7 @@ interface TitleBoxProps {
 
 function TitleBox({ title, gridArea }: TitleBoxProps) {
     return (
-        <div className={`${'title-box'} ${gridArea}`}>
+        <div className={`${'trend-title-box'} ${gridArea}`}>
             <h1>{title}</h1>
         </div>
     )
@@ -28,7 +27,7 @@ interface SingleDataBoxProps {
 function SingleDataBox({ dataName, dataValue, dataPostfix, girdArea }: SingleDataBoxProps) {
     return (
         <div className={`${'single-data-box'} ${girdArea}`}>
-            <h3>{dataName}</h3>
+            <h4>{dataName}</h4>
             <p>{`${dataValue}${dataPostfix}`}</p>
         </div>
     )
@@ -46,7 +45,7 @@ interface DoubleDataBoxProps {
 function DoubleDataBox({ dataName, data1Value, data1Postfix, data2Value, data2Postfix, girdArea }: DoubleDataBoxProps) {
     return (
         <div className={`${'double-data-box'} ${girdArea}`}>
-            <h3>{dataName}</h3>
+            <h4>{dataName}</h4>
             <div className='double-data-inline-values'>
                 <p>{`${data1Value}${data1Postfix}`}</p>
                 <p>{`(${data2Value}${data2Postfix})`}</p>
@@ -58,13 +57,12 @@ function DoubleDataBox({ dataName, data1Value, data1Postfix, data2Value, data2Po
 
 interface NewsSourceElementProps {
     source: Source;
-    trendData: TrendData;
 }
 
-export default function NewsSourceElement({ source, trendData }: NewsSourceElementProps) {
+export default function NewsSourceElement({ source }: NewsSourceElementProps) {
 
     return (
-        <div className="container">
+        <div className="news-source-elem-container">
             <div className="source-name rounded-box">
                 <TitleBox title={source.name} gridArea='source-name' />
             </div>
@@ -149,14 +147,6 @@ export default function NewsSourceElement({ source, trendData }: NewsSourceEleme
                     dataPostfix=''
                     girdArea='single-data-box' />
             </div>
-
-            <div className="sentiment-trend-div  rounded-box">
-                <h2>Sentiment Trend</h2>
-                <div className='sentiment-trend-chart'>
-                    <SentimentTrendChart {...trendData}/>
-                </div>
-            </div>
-
         </div>
     )
 }

@@ -1,13 +1,29 @@
 @import '../../constants.css';
 
-.a {
+.selection-container {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
 }
 
-.a h2 {
+.select-time-container {
+    display: flex;
+    align-items: center;
+    margin-right: 50px;
+}
+
+.selection-text-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.selection-container h3 {
+    margin-right: 20px;
+}
+
+.selection-container h2 {
     margin-right: 20px;
 }
 
@@ -22,6 +38,7 @@ input {
 button {
     margin-top: auto;
     margin-bottom: auto;
+    margin-right: 50px;
     height: 50px;
     width: 50px;
     font-size: 20pt;
