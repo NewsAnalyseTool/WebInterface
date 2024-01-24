@@ -63,7 +63,10 @@ export default function SentimentTrendChart(trendData: TrendData) {
     return (
         //<Line options={options} data={data}/>
 
-        <LineChart
+        (labels.length === 0) ? (
+            <h3 style={{ marginTop: -50 }}>No Data</h3>
+        ) : (
+            <LineChart
             xAxis={[{ 
                 scaleType: 'band',
                 data: labels,
@@ -92,5 +95,6 @@ export default function SentimentTrendChart(trendData: TrendData) {
             width={1400}
             height={250}
         />
+        )        
     );
-}
+}0

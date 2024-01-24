@@ -22,7 +22,7 @@ const theme = createTheme({
         },
     },
     typography: {
-        fontFamily: '"Francois One", "Roboto", "Helvetica", "Arial", sans-serif',
+        fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
     },
 });
 
