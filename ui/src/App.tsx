@@ -110,6 +110,9 @@ export default function App() {
 
             source.categories.map((category, index) => {
                 category.color = colors[index];
+                if (category.name === "") {
+                    category.name = "unknown"
+                }
             });
 
             responseNewsData = receivedData;

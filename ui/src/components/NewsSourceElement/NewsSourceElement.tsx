@@ -74,7 +74,7 @@ export default function NewsSourceElement({ source }: NewsSourceElementProps) {
                         <div className="category_list_item" key={key}>
                             <div className="category_color" style={{ backgroundColor: category.color }}></div>
                             <p>{category.count}</p>
-                            { category.name === "" ? <p>unknown</p> : <p>{category.name}</p>}
+                            <p>{category.name}</p>
                         </div>
                     ))}
                 </div>
