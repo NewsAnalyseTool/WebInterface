@@ -66,9 +66,7 @@ export default function App() {
 
     // ## Request Functions ##
     async function requestGeneralData(startDate: string, endDate: string) {
-        console.log("App: Requesting the backend for general data with the url:")
         const url: string = `http://${config.apiIP}:${config.apiPort}/api/data?startDate=${startDate}&endDate=${endDate}`;
-        console.log(url)
 
         let receivedData: NewsData = { totalArticles: 0, totalCategories: 0, sources: [] };
 
@@ -76,9 +74,6 @@ export default function App() {
             .then((response) => response.json())
             .then((data) => receivedData = data)
             .catch((error) => console.error(error));
-
-        console.log("App: Fetched general data:")
-        console.log(newsData)
 
         receivedData.sources.map(source => {
             let sortedCategories: Category[] = source.categories.sort((a: Category, b: Category) => b.count - a.count);
@@ -124,16 +119,11 @@ export default function App() {
     }
 
     async function requestTrendData(startDate: string, endDate: string) {
-        console.log("App: UseEffect triggered. Requesting the backend for trend data with the url:")
         const url: string = `http://${config.apiIP}:${config.apiPort}/api/trend?startDate=${startDate}&endDate=${endDate}`;
-        console.log(url)
         await fetch(url)
             .then((response) => response.json())
             .then((data) => responseTrendData = data)
             .catch((error) => console.error(error));
-
-        console.log("App: Fetched trend data:")
-        console.log(trendData);
     }
 
     return (
@@ -145,8 +135,6 @@ export default function App() {
                         onTimeChanged={
                             async (startDate: string, endDate: string) => {
                                 await requestGeneralData(startDate, endDate);
-                                console.log("I GOT SOMETHING REALLY IMPOTANT")
-                                console.log(newsData)
                                 await requestTrendData(startDate, endDate);
 
                                 setTrendData(responseTrendData);
