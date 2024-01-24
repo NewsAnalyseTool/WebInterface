@@ -10,7 +10,7 @@ interface TitleBoxProps {
 
 function TitleBox({ title, gridArea }: TitleBoxProps) {
     return (
-        <div className={`${'trend-title-box'} ${gridArea}`}>
+        <div className={`${'title-box'} ${gridArea}`}>
             <h1>{title}</h1>
         </div>
     )

@@ -8,12 +8,11 @@ interface TrendSourceProps {
 
 interface TitleBoxProps {
     title: string;
-    gridArea: string;
 }
 
-function TitleBox({ title, gridArea }: TitleBoxProps) {
+function TitleBox({ title }: TitleBoxProps) {
     return (
-        <div className={`${'title-box'} ${gridArea}`}>
+        <div className={'trend-title-box'}>
             <h1>{title}</h1>
         </div>
     )
@@ -24,7 +23,7 @@ export default function TrendDataElement({ trendData }: TrendSourceProps) {
         <div className="trend-data-elem-container">
 
             <div className="trend-source-name trend-rounded-box">
-                <TitleBox title={trendData.source} gridArea='source-name' />
+                <TitleBox title={trendData.source}/>
             </div>
 
             <div className="sentiment-trend-div  trend-rounded-box">

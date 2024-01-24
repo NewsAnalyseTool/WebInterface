@@ -10,20 +10,21 @@
         "source-name source-name tca tca tca tca tca tca tca tca"
         "source-name source-name tca tca tca tca tca tca tca tca"
         "source-name source-name tca tca tca tca tca tca tca tca";
-    height: 300px;
+    height: 340px;
     margin-bottom: 7px;
+    
 }
 
 .trend-rounded-box {
-    background-color: var(--secondary);
     border-radius: 5px;
 }
 
 .trend-source-name {
     grid-area: source-name;
-    background-color: var(--primary);
+    border: 1px;
+    border-style: solid;
+    border-color: var(--primary);
     border-radius: 5px;
-
 }
 
 .trend-title-box {
@@ -40,4 +41,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
+
+    border: 1px;
+    border-style: solid;
+    border-color: var(--primary);
+    border-radius: 5px;
 }
