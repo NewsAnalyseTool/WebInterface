@@ -82,7 +82,7 @@ export default function NewsSourceElement({ source }: NewsSourceElementProps) {
 
             <div className="categories-chart-div  rounded-box">
                 <h2>Distribution</h2>
-                <div className='categories-chart'>
+                <div className="categories-chart">
                     <TopicPieChart {...source} />
                 </div>
             </div>
