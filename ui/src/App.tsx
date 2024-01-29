@@ -78,7 +78,7 @@ export default function App() {
         receivedData.sources.map(source => {
             let sortedCategories: Category[] = source.categories.sort((a: Category, b: Category) => b.count - a.count);
 
-            const numberDetailedCategories: number = 3
+            const numberDetailedCategories: number = 9
             if (sortedCategories.length > numberDetailedCategories) {
                 let top5: Category[] = sortedCategories.slice(0, numberDetailedCategories);
                 let rest: Category[] = sortedCategories.slice(numberDetailedCategories);
@@ -106,7 +106,7 @@ export default function App() {
                 source.categories = combinedCategories;
             };
 
-            const colors: string[] = ['#9b59b6 ', '#2980b9', '#16a085', '#e67e22']
+            const colors: string[] = ["#ff595e","#ff924c","#ffca3a","#c5ca30","#8ac926","#52a675","#1982c4","#4267ac","#6a4c93","#b5a6c9"]
 
             source.categories.map((category, index) => {
                 category.color = colors[index];

@@ -1,3 +1,4 @@
+import { List, ListItem } from '@mui/material';
 import { Source } from '../../App';
 import SentimentChart from '../SentimentChart/SentimentChart';
 import TopicPieChart from '../TopicPieChart/TopicPieChart';
@@ -50,7 +51,7 @@ function DoubleDataBox({ dataName, data1Value, data1Postfix, data2Value, data2Po
                 <p>{`${data1Value}${data1Postfix}`}</p>
                 <p>{`(${data2Value}${data2Postfix})`}</p>
             </div>
-            
+
         </div>
     )
 }
@@ -70,13 +71,29 @@ export default function NewsSourceElement({ source }: NewsSourceElementProps) {
             <div className="categories  rounded-box">
                 <h2>Categories</h2>
                 <div className="category_list">
-                    {source.categories.map((category, key) => (
-                        <div className="category_list_item" key={key}>
-                            <div className="category_color" style={{ backgroundColor: category.color }}></div>
-                            <p>{category.count}</p>
-                            <p>{category.name}</p>
-                        </div>
-                    ))}
+                    <List
+                        sx={{
+                            maxWidth: 400,
+                            bgcolor: '',
+                            position: 'relative',
+                            overflow: 'auto',
+                            maxHeight: 110,
+                        }}
+                    >
+                        {source.categories.map((category, key) => (
+                            <ListItem key={key}>
+                                <div className="category_list_item" key={key}>
+                                    <div className="category_color" style={{ backgroundColor: category.color }}></div>
+                                    <p>{category.count}</p>
+                                    {category.name.length <= 15 ?
+                                        <p>{category.name}</p> :
+                                        <p>{category.name.substring(0, 15) + "..."}</p>
+                                    }
+
+                                </div>
+                            </ListItem>
+                        ))}
+                    </List>
                 </div>
             </div>
 
@@ -116,12 +133,12 @@ export default function NewsSourceElement({ source }: NewsSourceElementProps) {
 
             <div className="sentiment-neg  rounded-box">
                 <DoubleDataBox
-                        dataName='Negative Articles'
-                        data1Value={source.negArticles}
-                        data1Postfix=''
-                        data2Value={parseFloat(source.negArticlesPerc.toFixed(2))}
-                        data2Postfix='%'
-                        girdArea='double-data-box' />
+                    dataName='Negative Articles'
+                    data1Value={source.negArticles}
+                    data1Postfix=''
+                    data2Value={parseFloat(source.negArticlesPerc.toFixed(2))}
+                    data2Postfix='%'
+                    girdArea='double-data-box' />
             </div>
 
             <div className="num-articles  rounded-box">
