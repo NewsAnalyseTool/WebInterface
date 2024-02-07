@@ -5,6 +5,11 @@ import random
 import string
 import json
 
+##############################################################
+                    General Data Endpoint
+##############################################################
+
+
 class Category:
     def __init__(self):
         self.name = self.random_name(random.randint(2, 10))
@@ -91,12 +96,19 @@ class TestDataEncoder(json.JSONEncoder):
 app = Flask(__name__)
 CORS(app)
 
-# Route for Reddit data
+# Route for random general data
 @app.route("/api/data", methods=["GET"])
 def get_data():
     return jsonify(TestDataEncoder().default(Response()))
 
+
+
+
 ##############################################################
+                    Trend Data Endpoint
+##############################################################
+
+
 
 class Day:
     def __init__(self, date):
@@ -104,6 +116,7 @@ class Day:
         self.pos = random.randint(0, 15)
         self.neu = random.randint(0, 15)
         self.neg = random.randint(0, 15)
+
 
 class Timeline:
     def __init__(self, start_date_str, end_date_str):
@@ -123,6 +136,18 @@ class Timeline:
             return f"Error parsing date: {str(e)}", 400
 
         
+class TrendSource:
+    def __init__(self, name, start_date_str, end_date_str):
+        self.name = name
+        self.timeline = Timeline(start_date_str, end_date_str)
+
+
+class TrendResponse:
+    def __init__(self, start_date_str, end_date_str):
+        self.red = TrendSource("Reddit", start_date_str, end_date_str)
+        self.ts = TrendSource("Tagesschau", start_date_str, end_date_str)
+        self.nyt = TrendSource("NewYorkTimes", start_date_str, end_date_str)
+        self.sources = [self.red, self.ts, self.nyt]
 
 
 class TestTrendEncoder(json.JSONEncoder):
@@ -131,21 +156,27 @@ class TestTrendEncoder(json.JSONEncoder):
             return {
                 'date': obj.date,
                 'pos': obj.pos,
-                'neu': obj.neu,
+                'neut': obj.neu,
                 'neg': obj.neg,
             }
-        elif isinstance(obj, Timeline):
+        elif isinstance(obj, TrendSource):
             return {
-                'timeline': [self.default(day) for day in obj.days]
+                'source': obj.name,
+                'datapoints': [self.default(datapoint) for datapoint in obj.timeline.days]
             }
+        elif isinstance(obj, TrendResponse):
+            return [self.default(source) for source in obj.sources]
         return super(TestTrendEncoder, self).default(obj)
 
+
+# Route for random trend data
 @app.route("/api/trend", methods=["GET"])
 def get_trend():
     start_date_str = request.args.get('startDate')
     end_date_str = request.args.get('endDate')
 
-    return jsonify(TestTrendEncoder().default(Timeline(start_date_str, end_date_str)))
+    encoded = TestTrendEncoder().default(TrendResponse(start_date_str, end_date_str))
+    return jsonify(encoded)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)

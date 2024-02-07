@@ -18,6 +18,7 @@ function TitleBox({ title }: TitleBoxProps) {
     )
 }
 
+// The trend source component shows the trend data for one news source
 export default function TrendDataElement({ trendData }: TrendSourceProps) {
     return (
         <div className="trend-data-elem-container">

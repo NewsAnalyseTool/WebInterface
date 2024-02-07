@@ -1,5 +1,6 @@
 import './Header.css';
 
+// Just a simple header component
 const Header = () => {
     return (
         <header>

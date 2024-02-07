@@ -4,6 +4,8 @@ import SentimentChart from '../SentimentChart/SentimentChart';
 import TopicPieChart from '../TopicPieChart/TopicPieChart';
 import './NewsSourceElement.css';
 
+
+// Helper classes
 interface TitleBoxProps {
     title: string;
     gridArea: string;
@@ -60,6 +62,8 @@ interface NewsSourceElementProps {
     source: Source;
 }
 
+
+// The news source element displays the general data for a source in one row
 export default function NewsSourceElement({ source }: NewsSourceElementProps) {
 
     return (

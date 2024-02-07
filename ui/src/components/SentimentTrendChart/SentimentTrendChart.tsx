@@ -15,14 +15,15 @@ ChartJS.register(
     LineElement
 );
 
+// The sentiment trend chart, is a graph, that shows the number of positive
+// negative and neutral articles at the y-axis and the time at the x-axis.
 export default function SentimentTrendChart(trendData: TrendData) {
-    // Extract data for the chart
-
     let labels: string[] = []
     let positiveValues: number[] = []
     let neutralValues: number[] = []
     let negativeValues: number[] = []
 
+    // We 
     if (trendData.datapoints != undefined) {
         const aggregatedData: { [date: string]: {
             pos: number
@@ -30,6 +31,11 @@ export default function SentimentTrendChart(trendData: TrendData) {
             neg: number
         } } = {};
 
+        // The backend sends back data with a much higher granularity of the time
+        // then we want to display. The backend saves each datapoint with
+        // millisecond accuracy. For us, it's enough to now how many articles
+        // where posted on one day. So we sum up all datapoints, which are from
+        // the same date.
         trendData.datapoints.forEach((datapoint) => {
             const { date } = datapoint;
             if (aggregatedData[date] != undefined) {

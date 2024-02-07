@@ -9,11 +9,14 @@ interface SelectionRowProps {
     totalCategories: number
 }
 
+// The selection row is the element on the top of the screen, where the user
+// can select between different views and change the considered time range
 export default function SelectionRow({ onTimeChanged, onDataSelectionChanged, totalArticles, totalCategories }: SelectionRowProps) {
     const [startDate, setStartDate] = useState<string>("2023-01-01");
     const [endDate, setEndDate] = useState<string>("2023-12-31");
 
-    // Their must be a initial request with the default date values.
+    // This invokes an initial request to display the data for the default time
+    // span.
     useEffect(() => {
         onTimeChanged(startDate, endDate)
     }, []);
@@ -47,8 +50,9 @@ export default function SelectionRow({ onTimeChanged, onDataSelectionChanged, to
                 <h3>Total Categories: {totalCategories}</h3>
 
                 <button onClick={() => {
-                // When the update button was clicked, the new dates are send back to the app component,
-                // where the requests are send to the backend
+                // When the update button was clicked, the new dates are send
+                // back to the app component, where the requests are send to 
+                // the backend
                 onTimeChanged(startDate, endDate);
             }}>↺</button>
             </div>

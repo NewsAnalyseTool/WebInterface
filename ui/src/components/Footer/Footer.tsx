@@ -1,5 +1,6 @@
 import './Footer.css';
 
+// Just a simple footer component
 const Footer = () => {
     return (
         <footer>
