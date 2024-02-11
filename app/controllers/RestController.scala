@@ -12,6 +12,8 @@ import model.DatapointChartResponse
 import model.GeneralDataResponse
 import play.api.libs.json.JsArray
 
+/** Main controller handling requests from the frontend
+  */
 @Singleton
 class RestController @Inject() (implicit
     ec: ExecutionContext,
@@ -19,6 +21,13 @@ class RestController @Inject() (implicit
     val aggregationService: AggregationService
 ) extends AbstractController(cc) {
 
+  /**
+    * retrieves general data in the provided span of time
+    *
+    * @param startDate starting date
+    * @param endDate ending date
+    * @return GeneralDataResponse from startDate to endDate
+    */
   def getData(
       startDate: String,
       endDate: String
@@ -30,6 +39,13 @@ class RestController @Inject() (implicit
       }
     }
 
+    /**
+      * retrieves data for the sentiment trend in the provided range
+      *
+      * @param startDate staring Date
+      * @param endDate ending Date
+      * @return sequnce of DatapointChartResponse for each source
+      */
   def getSentimentTrend(
       startDate: String,
       endDate: String

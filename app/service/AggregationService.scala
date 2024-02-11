@@ -23,21 +23,32 @@ import scala.concurrent.Future
 import java.text.SimpleDateFormat
 import java.util.Date
 
+/** service layer which takes care of aggregating the different statistics the
+  * user is interested in
+  *
+  * @param ec
+  * @param repo
+  *   data access layer which retrieves the needed data
+  */
 @Singleton
 class AggregationService @Inject() (implicit
     ec: ExecutionContext,
     val repo: MongoDb
 ) {
 
-  // change to all sources in production
   val sources: Seq[Value] = Source.values.toSeq
 
-  // convert string to Date object
-  def stringToDate(date: String): Date = {
+  private def stringToDate(date: String): Date = {
     val dateformat = new SimpleDateFormat("yyyy-MM-dd")
     dateformat.parse(date)
   }
 
+  /** gather the data for the general response
+    *
+    * @param startDate
+    * @param endDate
+    * @return
+    */
   def aggregateGeneralStats(
       startDate: String,
       endDate: String
@@ -53,7 +64,6 @@ class AggregationService @Inject() (implicit
     val allDataFuture: Future[Seq[Seq[AnalyzedPost]]] =
       Future.sequence(dataFutures)
 
-    // compute statistics for the controller (https://github.com/SearchTrendAnalyseTool/Documentation/wiki/WebInterface-Documentation)
     allDataFuture.map { allData: Seq[Seq[AnalyzedPost]] =>
       // combine all data together
       val allPosts: Seq[AnalyzedPost] = allData.flatten
@@ -128,7 +138,12 @@ class AggregationService @Inject() (implicit
     BigDecimal(number).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
   }
 
-  // collect the trends for all sources
+  /** collect trends for all sources
+    *
+    * @param startDate
+    * @param endDate
+    * @return
+    */
   def getTrendForEachSource(
       startDate: String,
       endDate: String

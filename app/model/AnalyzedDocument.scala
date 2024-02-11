@@ -12,6 +12,19 @@ import java.text.SimpleDateFormat
 import reactivemongo.api.bson.BSONDateTime
 import java.util.Date
 
+/** a post retrieved from the database
+  *
+  * @param source
+  * @param title
+  * @param text
+  * @param category
+  * @param date
+  * @param url
+  * @param result
+  * @param positive
+  * @param negative
+  * @param neutral
+  */
 case class AnalyzedPost(
     source: String,
     title: String,
@@ -25,8 +38,8 @@ case class AnalyzedPost(
     neutral: Double
 )
 
-// defining custom reader because mongodb saves the sentiment fields as String
-// but we need it as a Double
+/** custom conversion to json
+  */
 object AnalyzedPost {
   implicit object AnalyzedPostReader extends BSONDocumentReader[AnalyzedPost] {
 
