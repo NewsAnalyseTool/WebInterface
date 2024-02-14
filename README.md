@@ -20,10 +20,4 @@ Follow these steps to set up and run the frontend:
 You should now be able to see the frontend in your browser with the url `http://localhost:5173/`.
 
 ## Complete Installation
-### Requirements
-- npm 10.4.0
-- the other components are running (have a look at the documention [here](https://github.com/NewsAnalyseTool/Documentation/wiki/))
-  
-If you want to host the whole project and connect the frontend to the real backend, you only need to change one thing in the frontend:
-
-Inside the `ui` folder you will find a `config.json` file. Change the ip address and port where the frontend can reach the API of the real backend. Now run the backend with `sbt run` and you are done.
+For a complete installation with the real backend running, please see the documentation [here](https://github.com/NewsAnalyseTool/Documentation/wiki/)).
