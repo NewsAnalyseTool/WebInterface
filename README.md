@@ -20,4 +20,4 @@ Follow these steps to set up and run the frontend:
 You should now be able to see the frontend in your browser with the url `http://localhost:5173/`.
 
 ## Complete Installation
-For a complete installation with the real backend running, please see the documentation [here](https://github.com/NewsAnalyseTool/Documentation/wiki/)).
+For a complete installation with the real backend running, please see the documentation [here](https://github.com/NewsAnalyseTool/Documentation/wiki/).
