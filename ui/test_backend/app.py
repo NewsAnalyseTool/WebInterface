@@ -6,7 +6,7 @@ import string
 import json
 
 ##############################################################
-                    General Data Endpoint
+#                   General Data Endpoint                    #
 ##############################################################
 
 
@@ -30,7 +30,7 @@ class Category:
 class Source:
     def __init__(self, name):
         self.name = name
-        self.categories = [Category() for _ in range(random.randint(2, 10))]
+        self.categories = [Category() for _ in range(random.randint(2, 15))]
         self.pos_articles = sum(category.pos for category in self.categories)
         self.neu_articles = sum(category.neu for category in self.categories)
         self.neg_articles = sum(category.neg for category in self.categories)
@@ -62,34 +62,34 @@ class TestDataEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Category):
             return {
-                'name': obj.name,
-                'count': obj.count,
-                'pos': obj.pos,
-                'posPerc': obj.pos_perc,
-                'neu': obj.neu,
-                'neuPerc': obj.neu_perc,
-                'neg': obj.neg,
-                'negPerc': obj.neg_perc
+                "name": obj.name,
+                "count": obj.count,
+                "pos": obj.pos,
+                "posPerc": obj.pos_perc,
+                "neu": obj.neu,
+                "neuPerc": obj.neu_perc,
+                "neg": obj.neg,
+                "negPerc": obj.neg_perc
             }
         elif isinstance(obj, Source):
             return {
-                'name': obj.name,
-                'articleCount': obj.article_count,
-                'articlePerc': obj.article_perc,
-                'categoryCount': len(obj.categories),
-                'posArticles': obj.pos_articles,
-                'posArticlesPerc': obj.pos_articles_perc,
-                'neuArticles': obj.neu_articles,
-                'neuArticlesPerc': obj.neu_articles_perc,
-                'negArticles': obj.neg_articles,
-                'negArticlesPerc': obj.neg_articles_perc,
-                'categories': [self.default(category) for category in obj.categories]
+                "name": obj.name,
+                "articleCount": obj.article_count,
+                "articlePerc": obj.article_perc,
+                "categoryCount": len(obj.categories),
+                "posArticles": obj.pos_articles,
+                "posArticlesPerc": obj.pos_articles_perc,
+                "neuArticles": obj.neu_articles,
+                "neuArticlesPerc": obj.neu_articles_perc,
+                "negArticles": obj.neg_articles,
+                "negArticlesPerc": obj.neg_articles_perc,
+                "categories": [self.default(category) for category in obj.categories]
             }
         elif isinstance(obj, Response):
             return {
-                'totalArticles': obj.total_articles,
-                'totalCategories': obj.total_categories,
-                'sources': [self.default(source) for source in obj.sources]
+                "totalArticles": obj.total_articles,
+                "totalCategories": obj.total_categories,
+                "sources": [self.default(source) for source in obj.sources]
             }
         return super(TestDataEncoder, self).default(obj)
 
@@ -105,7 +105,7 @@ def get_data():
 
 
 ##############################################################
-                    Trend Data Endpoint
+#                    Trend Data Endpoint                     #
 ##############################################################
 
 
@@ -154,15 +154,15 @@ class TestTrendEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Day):
             return {
-                'date': obj.date,
-                'pos': obj.pos,
-                'neut': obj.neu,
-                'neg': obj.neg,
+                "date": obj.date,
+                "pos": obj.pos,
+                "neut": obj.neu,
+                "neg": obj.neg,
             }
         elif isinstance(obj, TrendSource):
             return {
-                'source': obj.name,
-                'datapoints': [self.default(datapoint) for datapoint in obj.timeline.days]
+                "source": obj.name,
+                "datapoints": [self.default(datapoint) for datapoint in obj.timeline.days]
             }
         elif isinstance(obj, TrendResponse):
             return [self.default(source) for source in obj.sources]
@@ -175,8 +175,7 @@ def get_trend():
     start_date_str = request.args.get('startDate')
     end_date_str = request.args.get('endDate')
 
-    encoded = TestTrendEncoder().default(TrendResponse(start_date_str, end_date_str))
-    return jsonify(encoded)
+    return jsonify(TestTrendEncoder().default(TrendResponse(start_date_str, end_date_str)))
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    app.run(debug=True)

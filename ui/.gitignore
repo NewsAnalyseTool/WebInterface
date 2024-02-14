@@ -24,12 +24,8 @@ dist-ssr
 *.sln
 *.sw?
 
-# Environment variables
+# environment variables
 .env
 
-# Backend 
-test_backend/lib
-test_backend/bin
-test_backend/include
-test_backend/pyvenv.cfg
-test_backend/lib64
+# test backend 
+test_backend/venv
